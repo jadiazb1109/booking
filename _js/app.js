@@ -1,127 +1,79 @@
 $(() => {
-    let currentHouse;
+  document.onmousemove = function(){ localStorage.setItem("currentRideBookingTime", 0); }
 
-    $('#toolbar').dxToolbar({
-        items: [{
-          location: 'before',
-          widget: 'dxButton',
-          locateInMenu: 'auto',
-          options: {
-            type: 'warning',
-            stylingMode: 'outlined',
-            hint:'Go to home',
-            icon: 'home',
-            onClick() {
+  if (!localStorage.getItem("currentRideBooking")) {
+    location.href = "home";
+  }
+
+  var aviso = false;
+  setInterval(function() {
+    var time_sesion = localStorage.getItem("currentRideBookingTime");   
+
+    if(time_sesion > 1){
+
+      if(!aviso){
+        var confirm = DevExpress.ui.dialog.confirm("<i>Deseas continuar con la reserva</i>", "¿Desea continuar?");
+        aviso = true;
+        confirm.done((dialogResult) => {
+            if (dialogResult) {
+              localStorage.setItem("currentRideBookingTime", 0);
+              aviso = false;
+            }else{
+              localStorage.removeItem("currentRideBooking");
               location.href = "home";
-            },
-          },
-        },{
-          location: 'before',
-          widget: 'dxButton',
-          options: {
-            icon: 'back',
-            onClick() {
-              location.href = "home";
-            },
-          },
-        }, {
-          location: 'center',
-          locateInMenu: 'never',
-          template() {
-            return $("<div class='toolbar-label'><b>SELECCIONE EL ORIGEN</b></div>");
-          },
-        }
-        ],
-      });
-  
-    DevExpress.setTemplateEngine({
-      compile: (element) => $(element).html(),
-      render: (template, data) => Mustache.render(template, data),
-    });
-  
-    window.formatCurrency = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2,
-    }).format;
-  
-    const popupOptions = {
-      width: 660,
-      height: 540,
-      contentTemplate() {
-        const result = $(Mustache.render($('#property-details').html(), currentHouse));
-        const button = result.find('#favorites')
-          .dxButton(buttonOptions)
-          .dxButton('instance');
-        setButtonText(button, currentHouse.Favorite);
-        return result;
-      },
-      showTitle: true,
-      visible: false,
-      dragEnabled: false,
-      hideOnOutsideClick: true,
-      showCloseButton: true,
-    };
-  
-    const buttonOptions = {
-      icon: 'favorites',
-      width: 260,
-      height: 44,
-      onClick(e) {
-        currentHouse.Favorite = !currentHouse.Favorite;
-        setButtonText(e.component, currentHouse.Favorite);
-        showToast(currentHouse.Favorite);
-      },
-    };
-  
-    const popoverOptions = {
-      showEvent: 'mouseenter',
-      hideEvent: 'mouseleave',
-      width: 260,
-      position: {
-        offset: '0, 2',
-        at: 'bottom',
-        my: 'top',
-        collision: 'fit flip',
-      },
-    };
-  
-    function showToast(favoriteState) {
-      const message = `This item has been ${
-        favoriteState ? 'added to' : 'removed from'
-      } the Favorites list!`;
-      DevExpress.ui.notify({
-        message,
-        width: 450,
-      }, favoriteState ? 'success' : 'error', 2000);
+            }
+        });
+      }      
+
+    }else{
+      localStorage.setItem("currentRideBookingTime", (time_sesion * 1) + 1);
     }
-  
-    function setButtonText(button, isFav) {
-      button.option('text', isFav
-        ? 'Remove from Favorites'
-        : 'Add to Favorites');
-    }
-  
-    $.each(houses, (index, house) => {
-      const template = $(Mustache.render($('#property-item').html(), house));
-  
-      template.find(`#popover${house.ID}`)
-        .dxPopover($.extend(popoverOptions, {
-          target: `#house${house.ID}`,
-        }));
-  
-      template.find('.item-content').on('dxclick', () => {
-        currentHouse = house;
-        $('.popup-property-details').remove();
-        const container = $('<div />')
-          .addClass('popup-property-details')
-          .appendTo($('#popup'));
-        const popup = container.dxPopup(popupOptions).dxPopup('instance');
-        popup.option('title', currentHouse.Address);
-        popup.show();
-      });
-  
-      $('.images').append(template);
+  }, 60000);
+
+  const btnBackToHome = document.getElementById('btnBackToHome');
+  btnBackToHome.addEventListener('click', btnBackToHomeClick);
+  function btnBackToHomeClick(e) {
+      e.preventDefault();   
+      var confirm = DevExpress.ui.dialog.confirm("<i>Seguro que desea salir</i>", "¿Desea salir?");
+
+      confirm.done((dialogResult) => {
+          if (dialogResult) {
+            localStorage.removeItem("currentRideBooking");
+            location.href = "home";
+          }
+      }); 
+  }
+
+  let currentHouse;
+
+  DevExpress.setTemplateEngine({
+    compile: (element) => $(element).html(),
+    render: (template, data) => Mustache.render(template, data),
+  });
+
+  const mdOrigen = document.getElementById('mdOrigen');
+  $.each(houses, (index, house) => {
+    const template = $(Mustache.render($('#property-item-origen').html(), house));
+
+    template.find('.icon-box').on('dxclick', () => {
+      currentHouse = house;
+      mdOrigen.classList.add("collapse")
+      mdServicios.classList.remove("collapse")
     });
+
+    $('.listOrigen').append(template);
+  });
+
+  const mdServicios = document.getElementById('mdServicios');
+  $.each(houses, (index, house) => {
+    const template = $(Mustache.render($('#property-item-servicio').html(), house));
+
+    template.find('.icon-box').on('dxclick', () => {
+      currentHouse = house;
+      alert(currentHouse.City);
+    });
+
+    $('.listServicio').append(template);
+  });
+
 });
