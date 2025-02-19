@@ -1,1 +1,28 @@
+.modal-footer,
+.modal-header{
+    padding: inherit !important;
+}
+.modal-body{
+    background-color: #E9E9E9;
+}
+.modal-footer {
+    justify-content: space-between;
+}
 
+.dx-scheduler-work-space-month .dx-scheduler-date-table-cell {
+  color: black;
+  background-color: rgb(228, 161, 80);
+}
+
+.dx-popup-content {
+  font-size: 18px;
+}
+
+.caption {
+  padding-bottom: 8px;
+  font-weight: 500;
+}
+
+.content {
+  display: flex;
+}

@@ -37,8 +37,8 @@ class ConexionService
         } catch (PDOException $ex) {
             die(json_encode(
                 array(
-                    "estado" => "ko",
-                    "mensaje" => $ex->getMessage(),
+                    "state" => "ko",
+                    "message" => $ex->getMessage(),
                     "query" => []
                 )
             ));
@@ -58,13 +58,13 @@ class ConexionService
             $pdo->rollBack();
         }        
 
-        $query = 'INSERT INTO log_errores (fecha,metodo,consulta,codigo,error) 
-                                VALUES (NOW(),:metodo,:consulta,:codigo,:error);';
+        $query = 'INSERT INTO log_errores (date,method,query,code,error) 
+                                VALUES (NOW(),:method,:query,:code,:error);';
 
         $result =  $pdo->prepare($query);
-        $result->bindValue(":metodo", $LogModel->_get("metodo"));
-        $result->bindValue(":consulta", $LogModel->_get("consulta"));
-        $result->bindValue(":codigo", $LogModel->_get("codigo"));
+        $result->bindValue(":method", $LogModel->_get("method"));
+        $result->bindValue(":query", $LogModel->_get("query"));
+        $result->bindValue(":code", $LogModel->_get("code"));
         $result->bindValue(":error", $LogModel->_get("error"));
         $result->execute();
 

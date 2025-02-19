@@ -45,7 +45,16 @@
     function btnBookRideClick(e) {
         e.preventDefault();   
         localStorage.setItem("currentRideBooking", JSON.stringify({
-            uuid: uuid.v4()
+            uuid: uuid.v4(),
+            current_step: "mdOrigen",
+            steps: [],
+            origin: null,
+            service: null,
+            destiny: null,
+            date: null,
+            passenger_qty: null,
+            round_trip: false,            
+
         }));
         localStorage.setItem("currentRideBookingTime", 0);
         location.href = "app";

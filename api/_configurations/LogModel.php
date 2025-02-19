@@ -8,26 +8,26 @@ include_once 'Models.php';
  * @Table: log_errores
  * @Fields: {
  * id,
- * metodo,
- * consulta,
- * codigo,
+ * method,
+ * query,
+ * code,
  * error
  * }
  **/
 class LogModel extends Models {
 
     public $id;
-    public $metodo;
-    public $consulta;
-    public $codigo;
+    public $method;
+    public $query;
+    public $code;
     public $error;
 
     function toJson(){
         return array(
              "id" => $this->_get("id"),
-             "metodo" => $this->_get("metodo"),
-             "consulta" => $this->_get("consulta"),             
-             "codigo" => $this->_get("codigo"),
+             "method" => $this->_get("method"),
+             "query" => $this->_get("query"),             
+             "code" => $this->_get("code"),
              "error" => $this->_get("error")
          );
      }

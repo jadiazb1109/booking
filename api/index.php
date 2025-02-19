@@ -20,7 +20,6 @@ $api = new \Slim\Slim();
 
 //agregamos los archivos de negocios para su llamado
 include_once '_general/GeneralController.php';
-include_once '_user/UserController.php';
 
 
 //iniciamos la aplicacion
