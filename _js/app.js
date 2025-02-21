@@ -519,6 +519,19 @@ $(() => {
           body += cuerrentRide.passenger_qty;
         }
 
+        if(cuerrentRide.destiny && cuerrentRide.passenger_qty){
+
+          let cantMult = 1;
+
+          if(cuerrentRide.return.return){
+            cantMult = 2;
+          }
+
+          body += '<div class="caption">Total</div>';
+          body += "PAY $ " + 
+            (((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) * (cuerrentRide.passenger_qty * cantMult)) + " USD";
+        }
+
         if(cuerrentRide.pick_up_time){
           body += '<div class="caption">Pick Up Time</div>';
           body += cuerrentRide.pick_up_time.time_format;
@@ -530,6 +543,11 @@ $(() => {
             body += '<div class="caption">Return</div>';
             body += cuerrentRide.return.to + " - "+ cuerrentRide.return.date + " - "+ cuerrentRide.return.time;
           }          
+        }
+
+        if(cuerrentRide.client){
+          body += '<div class="caption">Contact Information</div>';
+          body += cuerrentRide.client.name + " / "+ cuerrentRide.client.phone + " / "+ cuerrentRide.client.email;
         }
     
 
