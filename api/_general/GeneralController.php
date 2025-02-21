@@ -89,11 +89,11 @@ $api->get('/v1/general/destinyUnionActive/service/:service_id/date/:date', funct
     }  
 });
 
-$api->get('/v1/general/pickUpTimeActive/service/:service_id', function ($service_id) use ($api) {
+$api->get('/v1/general/pickUpTimeActive/service/:service_id/date/:date', function ($service_id,$date) use ($api) {
 
     $generalService = new GeneralService();
 
-    $resp = $generalService->pickUpTimeActivosxServiceId($service_id);
+    $resp = $generalService->pickUpTimeActivosxServiceId($service_id,$date);
 
     if ($resp["state"] == "ok") {
 

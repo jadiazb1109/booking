@@ -331,7 +331,7 @@ $(() => {
         btnRideNext.classList.add("collapse");
 
         $.ajax({
-          url: "api/v1/general/pickUpTimeActive/service/" + cuerrentRide.service.id,
+          url: "api/v1/general/pickUpTimeActive/service/" + cuerrentRide.service.id + "/date/" + cuerrentRide.date,
           type: "GET",
           crossDomain: true,
           dataType: 'json',
