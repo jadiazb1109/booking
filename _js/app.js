@@ -17,39 +17,20 @@ $(() => {
   const mdCalendario = document.getElementById('mdCalendario');
   const mdDestino = document.getElementById('mdDestino');
   const mdPasajero = document.getElementById('mdPasajero');
+  const mdRecogida = document.getElementById('mdRecogida');
+  const mdRegreso = document.getElementById('mdRegreso');
+  const mdInformacionContacto = document.getElementById('mdInformacionContacto');
+  const mdInformacionTarjeta = document.getElementById('mdInformacionTarjeta');
 
   const btnBackToHome = document.getElementById('btnBackToHome');
   const btnRideShow = document.getElementById('btnRideShow');
   const btnRideBack = document.getElementById('btnRideBack');
   const btnRideNext = document.getElementById('btnRideNext');
 
-  if (!localStorage.getItem("currentRideBooking")) {
+  if(getDataCurrentRideBooking()){   
+    mdOrigen.classList.remove("collapse");
+  }else{
     location.href = "home";
-  }
-
-  if(getDataCurrentRideBooking()){
-   
-    if(cuerrentRide.current_step == "mdOrigen"){
-      mdOrigen.classList.remove("collapse");      
-    }
-    if(cuerrentRide.current_step == "mdServicio"){
-      mdServicio.classList.remove("collapse");
-      btnRideBack.classList.remove("collapse");     
-    }
-    if(cuerrentRide.current_step == "mdCalendario"){
-      mdCalendario.classList.remove("collapse");
-      btnRideBack.classList.remove("collapse"); 
-      btnRideNext.classList.remove("collapse");   
-    }
-    if(cuerrentRide.current_step == "mdDestino"){
-      mdDestino.classList.remove("collapse");
-      btnRideBack.classList.remove("collapse");    
-    }
-    if(cuerrentRide.current_step == "mdPasajero"){
-      mdPasajero.classList.remove("collapse");
-      btnRideBack.classList.remove("collapse"); 
-      btnRideNext.classList.remove("collapse");   
-    }
   }
 
   var aviso = false;
@@ -104,7 +85,16 @@ $(() => {
       setDataCurrentRideBooking(cuerrentRide);
 
       if(cuerrentRide.current_step == "mdOrigen"){
-        btnRideBack.classList.add("collapse");     
+        btnRideBack.classList.add("collapse");  
+        $('.listServicio').html(`                    
+          <script id="property-item-servicio" type="text/html">
+              <div class="icon-box">
+                  <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                      <b>{{ name }}</b>
+                  </div>
+              </div>
+          </script>
+      `);   
       }
 
       if(cuerrentRide.current_step == "mdServicio"){
@@ -113,6 +103,15 @@ $(() => {
 
       if(cuerrentRide.current_step == "mdCalendario"){
         btnRideNext.classList.remove("collapse");    
+        $('.listDestino').html(`                    
+          <script id="property-item-destino" type="text/html">
+              <div class="icon-box">
+                  <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                      <b>{{ destiny }}</b>
+                  </div>
+              </div>
+          </script>
+      `);
       }
 
       if(cuerrentRide.current_step == "mdDestino"){
@@ -120,7 +119,28 @@ $(() => {
       }
 
       if(cuerrentRide.current_step == "mdPasajero"){
-        btnRideNext.classList.remove("collapse");    
+        btnRideNext.classList.remove("collapse"); 
+        $('.listRecogida').html(`                    
+          <script id="property-item-recogida" type="text/html">
+              <div class="icon-box">
+                  <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                      <b>{{ time_format }}</b>
+                  </div>
+              </div>
+          </script>
+      `);   
+      }
+
+      if(cuerrentRide.current_step == "mdRecogida"){  
+        btnRideNext.classList.add("collapse");
+      }
+
+      if(cuerrentRide.current_step == "mdRegreso"){  
+        btnRideNext.classList.add("collapse"); 
+      }
+
+      if(cuerrentRide.current_step == "mdInformacionContacto"){ 
+        btnRideNext.classList.remove("collapse"); 
       }
   }
 
@@ -143,13 +163,16 @@ $(() => {
           const template = $(Mustache.render($('#property-item-origen').html(), origin));
       
           template.find('.icon-box').on('dxclick', () => {
+            cuerrentRide.steps = [];
             cuerrentRide.steps.push("mdOrigen");
             cuerrentRide.origin = origin;
-            cuerrentRide.service = null,
-            cuerrentRide.date = null;
-            cuerrentRide.passenger_qty = null;
-            cuerrentRide.price = 0;
-            cuerrentRide.additional = 0;
+            cuerrentRide.service= null,
+            cuerrentRide.destiny= null,
+            cuerrentRide.date= null,
+            cuerrentRide.passenger_qty= null,
+            cuerrentRide.pick_up_time= null,
+            cuerrentRide.return= null,            
+            cuerrentRide.client= null
             cuerrentRide.current_step = "mdServicio",
             setDataCurrentRideBooking(cuerrentRide);
             btnRideBack.classList.remove("collapse");
@@ -225,6 +248,10 @@ $(() => {
   }).dxCalendar('instance');
 
 
+  const txtName = document.getElementById("txtName");
+  const txtPhone = document.getElementById("txtPhone");
+  const txtEmail = document.getElementById("txtEmail");
+
   btnRideNext.addEventListener('click', btnRideNextClick);
   function btnRideNextClick(e) {
       e.preventDefault();   
@@ -294,9 +321,9 @@ $(() => {
           return;
         } 
 
-        cuerrentRide.steps.push("mdDestino");      
+        cuerrentRide.steps.push("mdPasajero");      
         cuerrentRide.passenger_qty = txtPassengerQty.textContent;
-        cuerrentRide.current_step = "mdPasajero";
+        cuerrentRide.current_step = "mdRecogida";
         setDataCurrentRideBooking(cuerrentRide);
         btnRideBack.classList.remove("collapse");
         mdPasajero.classList.add("collapse");
@@ -319,7 +346,7 @@ $(() => {
                     <script id="property-item-recogida" type="text/html">
                         <div class="icon-box">
                             <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
-                                <b>{{ time }}</b>
+                                <b>{{ time_format }}</b>
                             </div>
                         </div>
                     </script>
@@ -329,11 +356,51 @@ $(() => {
                 const template = $(Mustache.render($('#property-item-recogida').html(), pickUpTime));
             
                 template.find('.icon-box').on('dxclick', () => {
-                  cuerrentRide.steps.push("mdPasajero");
+                  cuerrentRide.steps.push("mdRecogida");
                   cuerrentRide.pick_up_time = pickUpTime;
-                  cuerrentRide.current_step = "mdRecogida";
+                  cuerrentRide.current_step = "mdRegreso";
                   setDataCurrentRideBooking(cuerrentRide);
-                  mtdMostrarMensaje("Hasta aqui vamos.. presiona el boton Ride");
+
+                  if(cuerrentRide.service.return == 1){
+
+                    btnRideBack.classList.remove("collapse");
+                    mdRecogida.classList.add("collapse");
+                    mdRegreso.classList.remove("collapse");
+                    btnRideNext.classList.add("collapse");
+
+                    $('.listRegreso').html(`                    
+                      <script id="property-item-regreso" type="text/html">
+                          <div class="icon-box">
+                              <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                                  <b>{{ option }}</b>
+                              </div>
+                          </div>
+                      </script>
+                  `);
+
+                    $.each(dataSourcerReturnRide, (index, returns) => {
+                      const template = $(Mustache.render($('#property-item-regreso').html(), returns));
+                  
+                      template.find('.icon-box').on('dxclick', () => {
+                        btnRideBack.classList.remove("collapse");
+                        mdRegreso.classList.add("collapse");
+                        mdInformacionContacto.classList.remove("collapse");
+                        btnRideNext.classList.remove("collapse");
+
+                        cuerrentRide.steps.push("mdRegreso");
+                        cuerrentRide.current_step = "mdInformacionContacto";
+                        cuerrentRide.return = returns;                        
+                        setDataCurrentRideBooking(cuerrentRide);             
+                        
+                      });
+                  
+                      $('.listRegreso').append(template);
+                    });
+
+                  }else{
+
+                  }                  
+                  
                 });
             
                 $('.listRecogida').append(template);
@@ -344,6 +411,62 @@ $(() => {
             }
         });
 
+      }
+
+      if(cuerrentRide.current_step == "mdInformacionContacto"){
+
+        if(!txtName.value){
+          mtdMostrarMensaje("Enter your name", "error");
+          return;
+        }
+        if(!txtPhone.value){
+          mtdMostrarMensaje("Enter your phone", "error");
+          return;
+        }
+        if(!txtEmail.value){
+          mtdMostrarMensaje("Enter your email", "error");
+          return;
+        }
+
+        cuerrentRide.steps.push("mdInformacionContacto"); 
+        cuerrentRide.client = {
+          name: txtName.value,
+          phone: txtPhone.value,
+          email: txtEmail.value
+        }
+        cuerrentRide.current_step = "mdInformacionTarjeta";
+        setDataCurrentRideBooking(cuerrentRide);
+        btnRideBack.classList.remove("collapse");
+        mdInformacionContacto.classList.add("collapse");
+        mdInformacionTarjeta.classList.remove("collapse");
+        btnRideNext.classList.add("collapse");
+
+        let cantMult = 1;
+
+        if(cuerrentRide.return.return){
+          cantMult = 2;
+        }
+
+        btnPay.textContent = "PAY $ " + 
+            (((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) * (cuerrentRide.passenger_qty * cantMult)) + " USD"
+      }
+  }
+
+  const txtCardNumber = document.getElementById("txtCardNumber");
+  const btnPay = document.getElementById("btnPay");
+
+  btnPay.addEventListener('click', btnPayClick);
+  function btnPayClick(e) {
+      e.preventDefault();   
+
+      if(cuerrentRide.current_step == "mdInformacionTarjeta"){
+
+        if(!txtCardNumber.value){
+          mtdMostrarMensaje("Enter your card number", "error");
+          return;
+        }
+
+        mtdMostrarMensaje("Pago realizado!!");
       }
   }
 
@@ -398,7 +521,15 @@ $(() => {
 
         if(cuerrentRide.pick_up_time){
           body += '<div class="caption">Pick Up Time</div>';
-          body += cuerrentRide.pick_up_time.time;
+          body += cuerrentRide.pick_up_time.time_format;
+        }
+
+        if(cuerrentRide.return){
+
+          if (cuerrentRide.return.return) {
+            body += '<div class="caption">Return</div>';
+            body += cuerrentRide.return.to + " - "+ cuerrentRide.return.date + " - "+ cuerrentRide.return.time;
+          }          
         }
     
 

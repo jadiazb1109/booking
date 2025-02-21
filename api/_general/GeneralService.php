@@ -185,13 +185,17 @@ class GeneralService extends ConexionService{
                 sput.id,
                 sput.service_id,
                 s.name service,
-                TIME_FORMAT(sput.time , "%h:%i %p")time,
+                sput.time,
+                TIME_FORMAT(sput.time , "%h:%i %p")time_format,
                 sput.active
                 FROM services_pick_up_time sput
                 JOIN services s ON s.id = sput.service_id
-                WHERE sput.active = 1 AND sput.service_id = :service_id
+                WHERE sput.active = 1 AND sput.service_id = :service_id AND sput.return = 0 
+                    AND sput.time BETWEEN TIME_FORMAT(NOW() , "%H:%i:%ss") AND TIME_FORMAT("23:59:00" , "%H:%i:%ss")
                 ORDER BY sput.time;
             ';
+
+            //AND sput.time BETWEEN TIME_FORMAT(NOW() , "%H:%i:%ss") AND TIME_FORMAT("23:59:00" , "%H:%i:%ss")
 
             $result = $pdo->prepare($query);
             $result->bindValue(":service_id", $service_id);

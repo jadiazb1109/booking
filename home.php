@@ -54,8 +54,8 @@
             date: null,
             passenger_qty: null,
             pick_up_time: null,
-            round_trip: false,            
-
+            return: null,            
+            client: null
         }));
         localStorage.setItem("currentRideBookingTime", 0);
         location.href = "app";

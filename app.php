@@ -45,7 +45,8 @@
                                                 <script id="property-item-origen" type="text/html">
                                                     <div class="icon-box">
                                                         <div class="icon-box btn btn-outline-secondary" title="{{ notes }}" style="align-content: center;width: 100%;">
-                                                            <b>{{ name }}</b>
+                                                            <b>{{ name }}</b><br>
+                                                            <small><em>{{ notes }}</em></small>
                                                         </div>
                                                     </div>
                                                 </script>
@@ -156,10 +157,84 @@
                                                 <script id="property-item-recogida" type="text/html">
                                                     <div class="icon-box">
                                                         <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
-                                                            <b>{{ time }}</b>
+                                                            <b>{{ time_format }}</b>
                                                         </div>
                                                     </div>
                                                 </script>
+                                            </div>
+                                        </div>                                        
+                                    </div>                                  
+                                </div>
+                            </div>
+                            <div class="collapse" id="mdRegreso">
+                                <div class="card">      
+                                    <div class="card-header text-center">
+                                        <h3>DO YOU NEED A RETURN RIDE AFTER THE CRUISE?</h3>
+                                        <hr>
+                                    </div>                              
+                                    <div class="card-body">
+                                        <div class="card-text" id="cdRegreso">
+                                            <div class="icon-grid row row-cols-xl-8 listRegreso" style="padding-left: 50px;padding-right: 50px;">
+                                                <script id="property-item-regreso" type="text/html">
+                                                    <div class="icon-box">
+                                                        <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                                                            <b>{{ option }}</b>
+                                                        </div>
+                                                    </div>
+                                                </script>
+                                            </div>
+                                        </div>                                        
+                                    </div>                                  
+                                </div>
+                            </div>
+                            <div class="collapse" id="mdInformacionContacto">
+                                <div class="card">
+                                    <div class="card-header text-center">
+                                        <h3>CONTAC INFORMATION</h3>
+                                        <hr>
+                                    </div>                              
+                                    <div class="card-body">
+                                        <div class="card-text" id="cdInformacionContacto">
+                                            <div class="icon-grid row row-cols-xl-8 listInformacionContacto" style="padding-left: 50px;padding-right: 50px;">
+                                                <div class="row">
+                                                    <div class="form-group">
+                                                        <label class="form-label" for="txtName"><strong>Name</strong></label>
+                                                        <input type="text" class="form-control" id="txtName" placeholder="Enter your name">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label" for="txtPhone"><strong>Phone</strong></label>
+                                                        <input type="text" class="form-control" id="txtPhone" placeholder="Enter your phone">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label" for="txtEmail"><strong>Email</strong></label>
+                                                        <input type="email" class="form-control" id="txtEmail" placeholder="Enter your email">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>                                        
+                                    </div>                                  
+                                </div>
+                            </div>
+                            <div class="collapse" id="mdInformacionTarjeta">
+                                <div class="card">
+                                    <div class="card-header text-center">
+                                        <h3>CARD INFORMATION</h3>
+                                        <hr>
+                                    </div>                              
+                                    <div class="card-body">
+                                        <div class="card-text" id="cdInformacionTarjeta">
+                                            <div class="icon-grid row row-cols-xl-8 listInformacionTarjeta" style="padding-left: 50px;padding-right: 50px;">
+                                                <div class="row">
+                                                    <div class="form-group">
+                                                        <label class="form-label" for="txtCardNumber"><strong>Card Number</strong></label>
+                                                        <input type="text" class="form-control" id="txtCardNumber" placeholder="Enter your card number">
+                                                    </div>                                         
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group text-center row row-cols-xl-8" style="padding-left: 50px;padding-right: 40px;">
+                                                        <button id="btnPay" type="button" class="btn btn-outline-success">PAY </button>
+                                                    </div>                                          
+                                                </div>
                                             </div>
                                         </div>                                        
                                     </div>                                  
