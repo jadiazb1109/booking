@@ -72,6 +72,7 @@ class GeneralService extends ConexionService{
                 t.name type,
                 s.name,
                 s.notes,
+                s.return,
                 s.active
                 FROM services s
                 JOIN type t ON t.id = s.type_id
@@ -110,5 +111,116 @@ class GeneralService extends ConexionService{
           
     }
 
+    function destinyUnionActivosxServiceIdDate($service_id,$date){
+
+        $pdo = $this->conectarBd();
+
+        try{
+
+            $query = '
+                SELECT 
+                sdu.id,
+                sdu.service_id,
+                s.name serivce,
+                d.type_id,
+                t.name type,
+                sdu.destiny_id,
+                d.name destiny,
+                d.address,
+                sdu.date,
+                sdu.price,
+                sdu.additional,
+                sdu.room_number,
+                sdu.important_information_initial,
+                sdu.terms_and_conditions,
+                sdu.notes,
+                sdu.active
+                FROM services_destiny_union sdu
+                JOIN services s ON s.id = sdu.service_id
+                JOIN destinys d ON d.id = sdu.destiny_id
+                JOIN type t ON t.id = d.type_id
+                WHERE sdu.active = 1 AND sdu.service_id = :service_id AND sdu.date = :date
+                ORDER BY d.name;
+            ';
+
+            $result = $pdo->prepare($query);
+            $result->bindValue(":service_id", $service_id);
+            $result->bindValue(":date", $date);
+            $result->execute(); 
+            
+            $this->response["state"]= "ok";
+            $this->response["message"]= "Resultado de la función destinyUnionActivosxServiceIdDate()";
+            $this->response["query"]= $result;
+           
+        }catch(PDOException $e){
+
+            $logModel = new LogModel();
+
+            $logModel->_set("method","GeneralService/destinyUnionActivosxServiceIdDate()");
+            $logModel->_set("query",$query);
+            $logModel->_set("code",$e->getCode());
+            $logModel->_set("error",$e->getMessage());
+
+            $logModel->_set("id",$this->guardarLogErrores($logModel));
+
+           $this->response["state"]= "ko";
+           $this->response["message"]= "Error al ejecutar la sentencia. Codigo: ".$logModel->_get("id");
+           $this->response["query"]= [];
+        } 
+
+        $pdo = $this->desconectarBd();
+
+        return $this->response;
+          
+    }
+
+    function pickUpTimeActivosxServiceId($service_id){
+
+        $pdo = $this->conectarBd();
+
+        try{
+
+            $query = '
+                SELECT
+                sput.id,
+                sput.service_id,
+                s.name service,
+                TIME_FORMAT(sput.time , "%h:%i %p")time,
+                sput.active
+                FROM services_pick_up_time sput
+                JOIN services s ON s.id = sput.service_id
+                WHERE sput.active = 1 AND sput.service_id = :service_id
+                ORDER BY sput.time;
+            ';
+
+            $result = $pdo->prepare($query);
+            $result->bindValue(":service_id", $service_id);
+            $result->execute(); 
+            
+            $this->response["state"]= "ok";
+            $this->response["message"]= "Resultado de la función pickUpTimeActivosxServiceId()";
+            $this->response["query"]= $result;
+           
+        }catch(PDOException $e){
+
+            $logModel = new LogModel();
+
+            $logModel->_set("method","GeneralService/pickUpTimeActivosxServiceId()");
+            $logModel->_set("query",$query);
+            $logModel->_set("code",$e->getCode());
+            $logModel->_set("error",$e->getMessage());
+
+            $logModel->_set("id",$this->guardarLogErrores($logModel));
+
+           $this->response["state"]= "ko";
+           $this->response["message"]= "Error al ejecutar la sentencia. Codigo: ".$logModel->_get("id");
+           $this->response["query"]= [];
+        } 
+
+        $pdo = $this->desconectarBd();
+
+        return $this->response;
+          
+    }
 }
 ?>

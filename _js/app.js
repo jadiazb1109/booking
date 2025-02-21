@@ -15,6 +15,8 @@ $(() => {
   const mdOrigen = document.getElementById('mdOrigen');
   const mdServicio = document.getElementById('mdServicio');
   const mdCalendario = document.getElementById('mdCalendario');
+  const mdDestino = document.getElementById('mdDestino');
+  const mdPasajero = document.getElementById('mdPasajero');
 
   const btnBackToHome = document.getElementById('btnBackToHome');
   const btnRideShow = document.getElementById('btnRideShow');
@@ -36,6 +38,15 @@ $(() => {
     }
     if(cuerrentRide.current_step == "mdCalendario"){
       mdCalendario.classList.remove("collapse");
+      btnRideBack.classList.remove("collapse"); 
+      btnRideNext.classList.remove("collapse");   
+    }
+    if(cuerrentRide.current_step == "mdDestino"){
+      mdDestino.classList.remove("collapse");
+      btnRideBack.classList.remove("collapse");    
+    }
+    if(cuerrentRide.current_step == "mdPasajero"){
+      mdPasajero.classList.remove("collapse");
       btnRideBack.classList.remove("collapse"); 
       btnRideNext.classList.remove("collapse");   
     }
@@ -99,6 +110,18 @@ $(() => {
       if(cuerrentRide.current_step == "mdServicio"){
         btnRideNext.classList.add("collapse");    
       }
+
+      if(cuerrentRide.current_step == "mdCalendario"){
+        btnRideNext.classList.remove("collapse");    
+      }
+
+      if(cuerrentRide.current_step == "mdDestino"){
+        btnRideNext.classList.add("collapse");    
+      }
+
+      if(cuerrentRide.current_step == "mdPasajero"){
+        btnRideNext.classList.remove("collapse");    
+      }
   }
 
   DevExpress.setTemplateEngine({
@@ -123,6 +146,10 @@ $(() => {
             cuerrentRide.steps.push("mdOrigen");
             cuerrentRide.origin = origin;
             cuerrentRide.service = null,
+            cuerrentRide.date = null;
+            cuerrentRide.passenger_qty = null;
+            cuerrentRide.price = 0;
+            cuerrentRide.additional = 0;
             cuerrentRide.current_step = "mdServicio",
             setDataCurrentRideBooking(cuerrentRide);
             btnRideBack.classList.remove("collapse");
@@ -144,7 +171,7 @@ $(() => {
                     $('.listServicio').html(`                    
                         <script id="property-item-servicio" type="text/html">
                             <div class="icon-box">
-                                <div class="icon-box btn btn-outline-warning" style="align-content: center;width: 100%;">
+                                <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
                                     <b>{{ name }}</b>
                                 </div>
                             </div>
@@ -157,13 +184,15 @@ $(() => {
                     template.find('.icon-box').on('dxclick', () => {
                       cuerrentRide.steps.push("mdServicio");
                       cuerrentRide.service = service;
-                      cuerrentRide.date = null;
-                      cuerrentRide.current_step = "mdCalendario",
+                      cuerrentRide.current_step = "mdCalendario";
                       setDataCurrentRideBooking(cuerrentRide);
-                      btnRideBack.classList.remove("collapse");
-                      mdServicio.classList.add("collapse");
-                      mdCalendario.classList.remove("collapse");
-                      btnRideNext.classList.remove("collapse"); 
+
+                      if(service.type_id == 1){
+                        btnRideBack.classList.remove("collapse");
+                        mdServicio.classList.add("collapse");
+                        mdCalendario.classList.remove("collapse");
+                        btnRideNext.classList.remove("collapse");
+                      }                       
                     });
                 
                     $('.listServicio').append(template);
@@ -181,28 +210,142 @@ $(() => {
         });
       }
       if (resultado["state"] === 'ko') {
-          mtdMostrarMensaje(resultado["mensaje"], "error");
+          mtdMostrarMensaje(resultado["message"], "error");
       }
   });
 
-  $('#scheduler').dxScheduler({
-    timeZone: 'America/Los_Angeles',
-    views: ['month'],
-    currentView: 'month',
-    currentDate: new Date(),
-    adaptivityEnabled: true,
-    editing: {
-      allowAdding: false,
-      allowDeleting: false,
-      allowUpdating: false,
-      allowResizing: false,
-      allowDragging: false,
-    },
-    onCellClick(e){
-      console.log("doble clic");
-    }
-  });
+  const calendar = $('#calendar').dxCalendar({
+    value: new Date(),
+    disabled: false,
+    firstDayOfWeek: 0,
+    showWeekNumbers: false,
+    weekNumberRule: 'auto',
+    zoomLevel: 'month',
+    min:new Date(),
+  }).dxCalendar('instance');
 
+
+  btnRideNext.addEventListener('click', btnRideNextClick);
+  function btnRideNextClick(e) {
+      e.preventDefault();   
+
+      if(cuerrentRide.current_step == "mdCalendario"){
+        let departureSelect = fnFechaFormatear(calendar.option('value'));
+        
+        cuerrentRide.steps.push("mdCalendario");      
+        cuerrentRide.date = departureSelect;
+        cuerrentRide.current_step = "mdDestino";
+        setDataCurrentRideBooking(cuerrentRide);
+        btnRideBack.classList.remove("collapse");
+        mdCalendario.classList.add("collapse");
+        mdDestino.classList.remove("collapse");
+        btnRideNext.classList.add("collapse");
+        
+        $.ajax({
+          url: "api/v1/general/destinyUnionActive/service/" + cuerrentRide.service.id + "/date/" + departureSelect,
+          type: "GET",
+          crossDomain: true,
+          dataType: 'json',
+          error: function() { 
+              mtdMostrarMensaje("Could not complete request to server", "warning");               }
+        }).done((resultado) => {
+            if (resultado["state"] === 'ok') {
+              if (resultado["data"].length == 0) {
+                mtdMostrarMensaje(resultado["message"], "warning"); 
+              
+                $('.listDestino').html(`                    
+                    <script id="property-item-destino" type="text/html">
+                        <div class="icon-box">
+                            <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                                <b>{{ destiny }}</b>
+                            </div>
+                        </div>
+                    </script>
+                `);
+              }
+              $.each(resultado["data"], (index, destiny) => {
+                const template = $(Mustache.render($('#property-item-destino').html(), destiny));
+            
+                template.find('.icon-box').on('dxclick', () => {
+
+                  cuerrentRide.steps.push("mdDestino");
+                  cuerrentRide.destiny = destiny;
+                  cuerrentRide.current_step = "mdPasajero";
+                  setDataCurrentRideBooking(cuerrentRide);
+                  btnRideBack.classList.remove("collapse");
+                  mdDestino.classList.add("collapse");
+                  mdPasajero.classList.remove("collapse");
+                  btnRideNext.classList.remove("collapse");
+                });
+            
+                $('.listDestino').append(template);
+              });
+            }
+            if (resultado["state"] === 'ko') {
+                mtdMostrarMensaje(resultado["message"], "error");
+            }
+        });
+      }
+
+      if(cuerrentRide.current_step == "mdPasajero"){
+
+        if (txtPassengerQty.textContent == 0) {
+          mtdMostrarMensaje("select the number of passengers", "error");
+          return;
+        } 
+
+        cuerrentRide.steps.push("mdDestino");      
+        cuerrentRide.passenger_qty = txtPassengerQty.textContent;
+        cuerrentRide.current_step = "mdPasajero";
+        setDataCurrentRideBooking(cuerrentRide);
+        btnRideBack.classList.remove("collapse");
+        mdPasajero.classList.add("collapse");
+        mdRecogida.classList.remove("collapse");
+        btnRideNext.classList.add("collapse");
+
+        $.ajax({
+          url: "api/v1/general/pickUpTimeActive/service/" + cuerrentRide.service.id,
+          type: "GET",
+          crossDomain: true,
+          dataType: 'json',
+          error: function() { 
+              mtdMostrarMensaje("Could not complete request to server", "warning");               }
+        }).done((resultado) => {
+            if (resultado["state"] === 'ok') {
+              if (resultado["data"].length == 0) {
+                mtdMostrarMensaje(resultado["message"], "warning"); 
+              
+                $('.listRecogida').html(`                    
+                    <script id="property-item-recogida" type="text/html">
+                        <div class="icon-box">
+                            <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                                <b>{{ time }}</b>
+                            </div>
+                        </div>
+                    </script>
+                `);
+              }
+              $.each(resultado["data"], (index, pickUpTime) => {
+                const template = $(Mustache.render($('#property-item-recogida').html(), pickUpTime));
+            
+                template.find('.icon-box').on('dxclick', () => {
+                  cuerrentRide.steps.push("mdPasajero");
+                  cuerrentRide.pick_up_time = pickUpTime;
+                  cuerrentRide.current_step = "mdRecogida";
+                  setDataCurrentRideBooking(cuerrentRide);
+                  mtdMostrarMensaje("Hasta aqui vamos.. presiona el boton Ride");
+                });
+            
+                $('.listRecogida').append(template);
+              });
+            }
+            if (resultado["state"] === 'ko') {
+                mtdMostrarMensaje(resultado["message"], "error");
+            }
+        });
+
+      }
+  }
 
   btnRideShow.addEventListener('click', btnRideShowClick);
   function btnRideShowClick(e) {
@@ -234,6 +377,29 @@ $(() => {
           body += '<div class="caption">Service</div>';
           body += '('+cuerrentRide.service.type+') - '+cuerrentRide.service.name;
         }
+
+        if(cuerrentRide.date){
+          body += '<div class="caption">Departure Day</div>';
+          body += cuerrentRide.date;
+        }
+
+        if(cuerrentRide.destiny){
+          body += '<div class="caption">Destiny</div>';
+          body += cuerrentRide.destiny.destiny;
+
+          body += '<div class="caption">Price</div>';
+          body +=  '$ '+cuerrentRide.destiny.price +' + ($ '+cuerrentRide.destiny.additional+')';
+        }
+
+        if(cuerrentRide.passenger_qty){
+          body += '<div class="caption">Passenger</div>';
+          body += cuerrentRide.passenger_qty;
+        }
+
+        if(cuerrentRide.pick_up_time){
+          body += '<div class="caption">Pick Up Time</div>';
+          body += cuerrentRide.pick_up_time.time;
+        }
     
 
         $scrollView.append($('<div/>').html(body));
@@ -248,10 +414,28 @@ $(() => {
     });
   }
 
+  const txtPassengerQty = document.getElementById("txtPassengerQty");
+  const btnIncrementar = document.getElementById("btnIncrementar");
+  const btnDecrementar = document.getElementById("btnDecrementar");
+  let items = 0;
+
+  function increaseItem() {
+    items++;
+    txtPassengerQty.textContent = items;
+  }
+
+  function decreaseItem(){
+    if(items > 0) items--;
+    txtPassengerQty.textContent = items;
+  }
+  
+  btnIncrementar.addEventListener("click", increaseItem);
+  btnDecrementar.addEventListener("click",decreaseItem);
+
   function mtdMostrarMensaje(mensaje, tipo = "success", time = 3000) {
 
     let direction = "down-push";
-    let position = "top center";
+    let position = "booton center";
 
     DevExpress.ui.notify({
         message: mensaje,
@@ -262,6 +446,23 @@ $(() => {
         position,
         direction
     });
-}
+  }
+
+  function fnFechaFormatear(fecha) {
+    var d = new Date(fecha);
+
+    var dia = d.getDate();
+    var mes = (d.getMonth() + 1);
+    var anno = d.getFullYear();
+
+    if (mes < 10) {
+        mes = "0" + mes;
+    }
+    if (dia < 10) {
+        dia = "0" + dia;
+    }
+
+    return anno + "-" + mes + "-" + dia;
+  }
 
 });

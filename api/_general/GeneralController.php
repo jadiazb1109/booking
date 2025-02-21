@@ -61,3 +61,57 @@ $api->get('/v1/general/serviceActive/origin/:origin_id', function ($origin_id) u
         echoResponse(200, $response);
     }  
 });
+
+$api->get('/v1/general/destinyUnionActive/service/:service_id/date/:date', function ($service_id,$date) use ($api) {
+
+    $generalService = new GeneralService();
+
+    $resp = $generalService->destinyUnionActivosxServiceIdDate($service_id,$date);
+
+    if ($resp["state"] == "ok") {
+
+        $datos = $resp["query"]->fetchAll(PDO::FETCH_ASSOC);      
+        
+        $response["state"] = "ok";
+        $response["message"]= "No data to display" ; 
+        $response["data"] = $datos;
+
+        if($resp["query"]->rowCount() > 0) 
+            $response["message"] = "List of active destiny x service_id: ". $service_id; 
+
+        echoResponse(200, $response);            
+    }else{
+        $response["state"]= "ko";
+        $response["message"]= $resp["message"];
+        $response["data"] = [];
+
+        echoResponse(200, $response);
+    }  
+});
+
+$api->get('/v1/general/pickUpTimeActive/service/:service_id', function ($service_id) use ($api) {
+
+    $generalService = new GeneralService();
+
+    $resp = $generalService->pickUpTimeActivosxServiceId($service_id);
+
+    if ($resp["state"] == "ok") {
+
+        $datos = $resp["query"]->fetchAll(PDO::FETCH_ASSOC);      
+        
+        $response["state"] = "ok";
+        $response["message"]= "No data to display" ; 
+        $response["data"] = $datos;
+
+        if($resp["query"]->rowCount() > 0) 
+            $response["message"] = "List of active pick up time x service_id: ". $service_id; 
+
+        echoResponse(200, $response);            
+    }else{
+        $response["state"]= "ko";
+        $response["message"]= $resp["message"];
+        $response["data"] = [];
+
+        echoResponse(200, $response);
+    }  
+});
