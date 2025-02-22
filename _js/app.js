@@ -20,6 +20,7 @@ $(() => {
   const mdRecogida = document.getElementById('mdRecogida');
   const mdRegreso = document.getElementById('mdRegreso');
   const mdCalendarioRegreso = document.getElementById('mdCalendarioRegreso');
+  const mdRecogidaRegreso = document.getElementById('mdRecogidaRegreso');
   const mdInformacionContacto = document.getElementById('mdInformacionContacto');
   const mdInformacionTarjeta = document.getElementById('mdInformacionTarjeta');
 
@@ -398,7 +399,6 @@ $(() => {
                         btnRideNext.classList.remove("collapse");
                         cuerrentRide.steps.push("mdRegreso");
                         cuerrentRide.return = returns;
-
                         if (returns.return) {
                           mdCalendarioRegreso.classList.remove("collapse");
                           cuerrentRide.current_step = "mdCalendarioRegreso";                                                  
@@ -467,6 +467,64 @@ $(() => {
 
         btnPay.textContent = "PAY $ " + 
             (((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) * (cuerrentRide.passenger_qty * cantMult)) + " USD"
+      }
+
+      if(cuerrentRide.current_step == "mdCalendarioRegreso"){
+        let departureSelect = fnFechaFormatear(calendarReturn.option('value'));
+        
+        cuerrentRide.steps.push("mdCalendarioRegreso");      
+        cuerrentRide.return.date = departureSelect;
+        cuerrentRide.current_step = "mdRecogidaRegreso";
+        setDataCurrentRideBooking(cuerrentRide);
+        btnRideBack.classList.remove("collapse");
+        mdCalendarioRegreso.classList.add("collapse");
+        mdRecogidaRegreso.classList.remove("collapse");
+        btnRideNext.classList.add("collapse");
+        
+        $.ajax({
+          url: "api/v1/general/pickUpTimeActiveReturn/service/" + cuerrentRide.service.id + "/date/" + departureSelect,
+          type: "GET",
+          crossDomain: true,
+          dataType: 'json',
+          error: function() { 
+              mtdMostrarMensaje("Could not complete request to server", "warning");               }
+        }).done((resultado) => {
+            if (resultado["state"] === 'ok') {
+              if (resultado["data"].length == 0) {
+                mtdMostrarMensaje(resultado["message"], "warning"); 
+              
+                $('.listRecogidaRegreso').html(`                    
+                    <script id="property-item-recogidaRegreso" type="text/html">
+                        <div class="icon-box">
+                            <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                                <b>{{ destiny }}</b>
+                            </div>
+                        </div>
+                    </script>
+                `);
+              }
+              $.each(resultado["data"], (index, pickUpTimeReturn) => {
+                const template = $(Mustache.render($('#property-item-recogidaRegreso').html(), pickUpTimeReturn));
+            
+                template.find('.icon-box').on('dxclick', () => {
+
+                  cuerrentRide.steps.push("mdRecogidaRegreso");
+                  cuerrentRide.return.pick_up_time = pickUpTimeReturn;
+                  cuerrentRide.current_step = "mdInformacionContacto";
+                  setDataCurrentRideBooking(cuerrentRide);
+                  btnRideBack.classList.remove("collapse");
+                  mdRecogidaRegreso.classList.add("collapse");
+                  mdInformacionContacto.classList.remove("collapse");
+                  btnRideNext.classList.remove("collapse");
+                });
+            
+                $('.listRecogidaRegreso').append(template);
+              });
+            }
+            if (resultado["state"] === 'ko') {
+                mtdMostrarMensaje(resultado["message"], "error");
+            }
+        });
       }
   }
 
@@ -538,7 +596,7 @@ $(() => {
 
           if (cuerrentRide.return.return) {
             body += '<div class="caption">Return</div>';
-            body += cuerrentRide.return.to + " - "+ cuerrentRide.return.date + " - "+ cuerrentRide.return.time;
+            body += cuerrentRide.return.to + " / "+ cuerrentRide.return.date + " / "+ cuerrentRide.return.pick_up_time.time_format;
           }          
         }
 

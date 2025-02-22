@@ -202,8 +202,6 @@ class GeneralService extends ConexionService{
                 ORDER BY sput.time;
             ';
 
-            //AND sput.time BETWEEN TIME_FORMAT(NOW() , "%H:%i:%ss") AND TIME_FORMAT("23:59:00" , "%H:%i:%ss")
-
             $result = $pdo->prepare($query);
             $result->bindValue(":service_id", $service_id);
             $result->execute(); 
@@ -217,6 +215,64 @@ class GeneralService extends ConexionService{
             $logModel = new LogModel();
 
             $logModel->_set("method","GeneralService/pickUpTimeActivosxServiceId()");
+            $logModel->_set("query",$query);
+            $logModel->_set("code",$e->getCode());
+            $logModel->_set("error",$e->getMessage());
+
+            $logModel->_set("id",$this->guardarLogErrores($logModel));
+
+           $this->response["state"]= "ko";
+           $this->response["message"]= "Error al ejecutar la sentencia. Codigo: ".$logModel->_get("id");
+           $this->response["query"]= [];
+        } 
+
+        $pdo = $this->desconectarBd();
+
+        return $this->response;
+          
+    }
+
+    function pickUpTimeActivosReturnxServiceId($service_id,$date){
+
+        $pdo = $this->conectarBd();
+
+        date_default_timezone_set("America/Bogota");
+        $whereDate = '';
+
+        if ( date($date) == date("Y-m-d")) {
+            $whereDate = ' AND sput.time BETWEEN TIME_FORMAT(NOW() , "%H:%i:%ss") AND TIME_FORMAT("23:59:00" , "%H:%i:%ss")';
+        }
+
+        try{
+
+            $query = '
+                SELECT
+                sput.id,
+                sput.service_id,
+                s.name service,
+                sput.time,
+                TIME_FORMAT(sput.time , "%h:%i %p")time_format,
+                sput.active
+                FROM services_pick_up_time sput
+                JOIN services s ON s.id = sput.service_id
+                WHERE sput.active = 1 AND sput.service_id = :service_id AND sput.return = 1
+                    '.$whereDate.'
+                ORDER BY sput.time;
+            ';
+
+            $result = $pdo->prepare($query);
+            $result->bindValue(":service_id", $service_id);
+            $result->execute(); 
+            
+            $this->response["state"]= "ok";
+            $this->response["message"]= "Resultado de la función pickUpTimeActivosReturnxServiceId()";
+            $this->response["query"]= $result;
+           
+        }catch(PDOException $e){
+
+            $logModel = new LogModel();
+
+            $logModel->_set("method","GeneralService/pickUpTimeActivosReturnxServiceId()");
             $logModel->_set("query",$query);
             $logModel->_set("code",$e->getCode());
             $logModel->_set("error",$e->getMessage());

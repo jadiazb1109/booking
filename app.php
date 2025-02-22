@@ -202,6 +202,27 @@
                                     </div>                                  
                                 </div>
                             </div>
+                            <div class="collapse" id="mdRecogidaRegreso">
+                                <div class="card">      
+                                    <div class="card-header text-center">
+                                        <h3>PICK UP TIME RETURN</h3>
+                                        <hr>
+                                    </div>                              
+                                    <div class="card-body">
+                                        <div class="card-text" id="cdRecogidaRegreso">
+                                            <div class="icon-grid row row-cols-xl-8 listRecogidaRegreso" style="padding-left: 50px;padding-right: 50px;">
+                                                <script id="property-item-recogidaRegreso" type="text/html">
+                                                    <div class="icon-box">
+                                                        <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                                                            <b>{{ time_format }}</b>
+                                                        </div>
+                                                    </div>
+                                                </script>
+                                            </div>
+                                        </div>                                        
+                                    </div>                                  
+                                </div>
+                            </div>
                             <div class="collapse" id="mdInformacionContacto">
                                 <div class="card">
                                     <div class="card-header text-center">

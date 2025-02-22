@@ -5,7 +5,7 @@ const dataSourcerReturnRide = [
     to: 'AIRPORT',
     option: 'YES, BRING ME BACK TO FORT LAUDERDALE AIRPORT',
     date: null,
-    time: null
+    pick_up_time: null
   },
   {
     id: 2,
@@ -13,7 +13,7 @@ const dataSourcerReturnRide = [
     to: 'HOTEL',
     option: 'YES, BRING ME BACK TO THE HOTEL',      
     date: null,
-    time: null
+    pick_up_time: null
   },
   {
     id: 3,
@@ -21,6 +21,6 @@ const dataSourcerReturnRide = [
     to: '',
     option: "NO, THANK YOU! I'M GOOD",
     date: null,
-    time: null
+    pick_up_time: null
   }
 ];
