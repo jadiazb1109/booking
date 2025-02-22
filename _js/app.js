@@ -142,16 +142,20 @@ $(() => {
       }
 
       if(cuerrentRide.current_step == "mdCalendarioRegreso"){  
-        btnRideNext.classList.add("collapse"); 
+        btnRideNext.classList.remove("collapse"); 
         $('.listRecogidaRegreso').html(`                    
             <script id="property-item-recogidaRegreso" type="text/html">
                 <div class="icon-box">
                     <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
-                        <b>{{ destiny }}</b>
+                        <b>{{ time_format }}</b>
                     </div>
                 </div>
             </script>
         `);
+      }
+
+      if(cuerrentRide.current_step == "mdRecogidaRegreso"){  
+        btnRideNext.classList.add("collapse");
       }
 
       if(cuerrentRide.current_step == "mdInformacionContacto"){ 
@@ -510,7 +514,7 @@ $(() => {
                     <script id="property-item-recogidaRegreso" type="text/html">
                         <div class="icon-box">
                             <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
-                                <b>{{ destiny }}</b>
+                                <b>{{ time_format }}</b>
                             </div>
                         </div>
                     </script>
