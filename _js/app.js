@@ -194,6 +194,7 @@ $(() => {
             cuerrentRide.pick_up_time= null,
             cuerrentRide.return= null,            
             cuerrentRide.client= null,
+            cuerrentRide.room_number= null,
             txtPassengerQty.textContent = 0;
             items = 0;
             cuerrentRide.current_step = "mdServicio",
@@ -230,6 +231,9 @@ $(() => {
                     template.find('.icon-box').on('dxclick', () => {
                       cuerrentRide.steps.push("mdServicio");
                       cuerrentRide.service = service;
+                      cuerrentRide.room_number= null,
+                      txtPassengerQty.textContent = 0;
+                      items = 0;
                       cuerrentRide.current_step = "mdCalendario";
                       setDataCurrentRideBooking(cuerrentRide);
 
