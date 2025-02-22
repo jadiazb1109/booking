@@ -21,9 +21,11 @@ $(() => {
   const mdRegreso = document.getElementById('mdRegreso');
   const mdCalendarioRegreso = document.getElementById('mdCalendarioRegreso');
   const mdRecogidaRegreso = document.getElementById('mdRecogidaRegreso');
+  const mdInformacionHabitacion = document.getElementById('mdInformacionHabitacion');
   const mdInformacionContacto = document.getElementById('mdInformacionContacto');
   const mdInformacionTarjeta = document.getElementById('mdInformacionTarjeta');
 
+  const hMdDestino = document.getElementById('hMdDestino');
   const btnBackToHome = document.getElementById('btnBackToHome');
   const btnRideShow = document.getElementById('btnRideShow');
   const btnRideBack = document.getElementById('btnRideBack');
@@ -191,7 +193,9 @@ $(() => {
             cuerrentRide.passenger_qty= null,
             cuerrentRide.pick_up_time= null,
             cuerrentRide.return= null,            
-            cuerrentRide.client= null
+            cuerrentRide.client= null,
+            txtPassengerQty.textContent = 0;
+            items = 0;
             cuerrentRide.current_step = "mdServicio",
             setDataCurrentRideBooking(cuerrentRide);
             btnRideBack.classList.remove("collapse");
@@ -229,7 +233,7 @@ $(() => {
                       cuerrentRide.current_step = "mdCalendario";
                       setDataCurrentRideBooking(cuerrentRide);
 
-                      if(service.type_id == 1){
+                      if(service.type_id == 1 || service.type_id == 2){
                         btnRideBack.classList.remove("collapse");
                         mdServicio.classList.add("collapse");
                         mdCalendario.classList.remove("collapse");
@@ -285,7 +289,9 @@ $(() => {
   function btnRideNextClick(e) {
       e.preventDefault();   
 
-      if(cuerrentRide.current_step == "mdCalendario"){
+      if(cuerrentRide.current_step == "mdCalendario" && cuerrentRide.service.type_id == 1){
+        
+        hMdDestino.textContent = "CRUISE";
         let departureSelect = fnFechaFormatear(calendar.option('value'));
         
         cuerrentRide.steps.push("mdCalendario");      
@@ -299,6 +305,66 @@ $(() => {
         
         $.ajax({
           url: "api/v1/general/destinyUnionActive/service/" + cuerrentRide.service.id + "/date/" + departureSelect,
+          type: "GET",
+          crossDomain: true,
+          dataType: 'json',
+          error: function() { 
+              mtdMostrarMensaje("Could not complete request to server", "warning");               }
+        }).done((resultado) => {
+            if (resultado["state"] === 'ok') {
+              if (resultado["data"].length == 0) {
+                mtdMostrarMensaje(resultado["message"], "warning"); 
+              
+                $('.listDestino').html(`                    
+                    <script id="property-item-destino" type="text/html">
+                        <div class="icon-box">
+                            <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                                <b>{{ destiny }}</b>
+                            </div>
+                        </div>
+                    </script>
+                `);
+              }
+              $.each(resultado["data"], (index, destiny) => {
+                const template = $(Mustache.render($('#property-item-destino').html(), destiny));
+            
+                template.find('.icon-box').on('dxclick', () => {
+
+                  cuerrentRide.steps.push("mdDestino");
+                  cuerrentRide.destiny = destiny;
+                  cuerrentRide.current_step = "mdPasajero";
+                  setDataCurrentRideBooking(cuerrentRide);
+                  btnRideBack.classList.remove("collapse");
+                  mdDestino.classList.add("collapse");
+                  mdPasajero.classList.remove("collapse");
+                  btnRideNext.classList.remove("collapse");
+                });
+            
+                $('.listDestino').append(template);
+              });
+            }
+            if (resultado["state"] === 'ko') {
+                mtdMostrarMensaje(resultado["message"], "error");
+            }
+        });
+      }
+
+      if(cuerrentRide.current_step == "mdCalendario" && cuerrentRide.service.type_id == 2){
+
+        hMdDestino.textContent = "AIRLINE";
+        let departureSelect = fnFechaFormatear(calendar.option('value'));
+        
+        cuerrentRide.steps.push("mdCalendario");      
+        cuerrentRide.date = departureSelect;
+        cuerrentRide.current_step = "mdDestino";
+        setDataCurrentRideBooking(cuerrentRide);
+        btnRideBack.classList.remove("collapse");
+        mdCalendario.classList.add("collapse");
+        mdDestino.classList.remove("collapse");
+        btnRideNext.classList.add("collapse");
+        
+        $.ajax({
+          url: "api/v1/general/destinyUnionActive/service/" + cuerrentRide.service.id + "/date/null",
           type: "GET",
           crossDomain: true,
           dataType: 'json',
@@ -387,54 +453,66 @@ $(() => {
                 template.find('.icon-box').on('dxclick', () => {
                   cuerrentRide.steps.push("mdRecogida");
                   cuerrentRide.pick_up_time = pickUpTime;
-                  cuerrentRide.current_step = "mdRegreso";
-                  setDataCurrentRideBooking(cuerrentRide);
-
-                  if(cuerrentRide.service.return == 1){
-
-                    btnRideBack.classList.remove("collapse");
-                    mdRecogida.classList.add("collapse");
-                    mdRegreso.classList.remove("collapse");
-                    btnRideNext.classList.add("collapse");
-
-                    $('.listRegreso').html(`                    
-                      <script id="property-item-regreso" type="text/html">
-                          <div class="icon-box">
-                              <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
-                                  <b>{{ option }}</b>
-                              </div>
-                          </div>
-                      </script>
-                  `);
-
-                    $.each(dataSourcerReturnRide, (index, returns) => {
-                      const template = $(Mustache.render($('#property-item-regreso').html(), returns));
-                  
-                      template.find('.icon-box').on('dxclick', () => {
-                        btnRideBack.classList.remove("collapse");
-                        mdRegreso.classList.add("collapse");                        
-                        btnRideNext.classList.remove("collapse");
-                        cuerrentRide.steps.push("mdRegreso");
-                        cuerrentRide.return = returns;
-                        if (returns.return) {
-                          mdCalendarioRegreso.classList.remove("collapse");
-                          cuerrentRide.current_step = "mdCalendarioRegreso";                                                  
-                          setDataCurrentRideBooking(cuerrentRide);
+                 
+                  if (cuerrentRide.service.type_id == 1) {
+                    if(cuerrentRide.service.return == 1){
+                      cuerrentRide.current_step = "mdRegreso";
+                      setDataCurrentRideBooking(cuerrentRide);  
+                      btnRideBack.classList.remove("collapse");
+                      mdRecogida.classList.add("collapse");
+                      mdRegreso.classList.remove("collapse");
+                      btnRideNext.classList.add("collapse");
+  
+                      $('.listRegreso').html(`                    
+                        <script id="property-item-regreso" type="text/html">
+                            <div class="icon-box">
+                                <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                                    <b>{{ option }}</b>
+                                </div>
+                            </div>
+                        </script>
+                    `);
+  
+                      $.each(dataSourcerReturnRide, (index, returns) => {
+                        const template = $(Mustache.render($('#property-item-regreso').html(), returns));
+                    
+                        template.find('.icon-box').on('dxclick', () => {
+                          btnRideBack.classList.remove("collapse");
+                          mdRegreso.classList.add("collapse");                        
+                          btnRideNext.classList.remove("collapse");
+                          cuerrentRide.steps.push("mdRegreso");
+                          cuerrentRide.return = returns;
+                          if (returns.return) {
+                            mdCalendarioRegreso.classList.remove("collapse");
+                            cuerrentRide.current_step = "mdCalendarioRegreso";                                                  
+                            setDataCurrentRideBooking(cuerrentRide);
+                            
+                          }else{
+                            mdInformacionContacto.classList.remove("collapse");
+                            cuerrentRide.current_step = "mdInformacionContacto";   
+                            setDataCurrentRideBooking(cuerrentRide);
+                          }                                    
                           
-                        }else{
-                          mdInformacionContacto.classList.remove("collapse");
-                          cuerrentRide.current_step = "mdInformacionContacto";   
-                          setDataCurrentRideBooking(cuerrentRide);
-                        }                                    
-                        
+                        });
+                    
+                        $('.listRegreso').append(template);
                       });
+  
+                    }
+                  }                 
                   
-                      $('.listRegreso').append(template);
-                    });
+                  if (cuerrentRide.service.type_id == 2) {
 
-                  }else{
-
-                  }                  
+                    if(cuerrentRide.service.room_number == 1){
+                      cuerrentRide.current_step = "mdInformacionHabitacion";
+                      setDataCurrentRideBooking(cuerrentRide);  
+                      btnRideBack.classList.remove("collapse");
+                      mdRecogida.classList.add("collapse");
+                      mdInformacionHabitacion.classList.remove("collapse");
+                      btnRideNext.classList.add("collapse");
+                    }
+                    
+                  }
                   
                 });
             
@@ -482,8 +560,9 @@ $(() => {
           cantMult = 2;
         }
 
-        btnPay.textContent = "PAY $ " + 
-            (((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) * (cuerrentRide.passenger_qty * cantMult)) + " USD"
+        btnPay.textContent = "PAY " + 
+        fnFormatoMoneda(((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) *
+           (cuerrentRide.passenger_qty * cantMult)) + " USD";
       }
 
       if(cuerrentRide.current_step == "mdCalendarioRegreso"){
@@ -542,6 +621,27 @@ $(() => {
                 mtdMostrarMensaje(resultado["message"], "error");
             }
         });
+      }
+  }
+
+  const txtRoomNumber = document.getElementById("txtRoomNumber");
+  const btnBookingAirport = document.getElementById("btnBookingAirport");
+
+  btnBookingAirport.addEventListener('click', btnBookingAirportClick);
+  function btnBookingAirportClick(e) {
+      e.preventDefault();   
+
+      if(cuerrentRide.current_step == "mdInformacionHabitacion"){
+
+        if(!txtRoomNumber.value){
+          mtdMostrarMensaje("Enter your room number", "error");
+          return;
+        }
+
+        cuerrentRide.room_number = txtRoomNumber.value;
+        setDataCurrentRideBooking(cuerrentRide);
+        
+        mtdMostrarMensaje("successful booking!!");
       }
   }
 
@@ -617,6 +717,11 @@ $(() => {
           }          
         }
 
+        if(cuerrentRide.room_number){
+          body += '<div class="caption">Room Number</div>';
+          body += cuerrentRide.room_number;
+        }
+
         if(cuerrentRide.passenger_qty){
           body += '<div class="caption">Passenger</div>';
           body += cuerrentRide.passenger_qty;
@@ -625,17 +730,18 @@ $(() => {
         if(cuerrentRide.destiny && cuerrentRide.passenger_qty){
 
           body += '<div class="caption">Price</div>';
-          body +=  '$ '+cuerrentRide.destiny.price +' + ($ '+cuerrentRide.destiny.additional+')';
+          body +=  fnFormatoMoneda(cuerrentRide.destiny.price) +' + ('+fnFormatoMoneda(cuerrentRide.destiny.additional)+')';
 
           let cantMult = 1;
 
-          if(cuerrentRide.return.return){
+          if(cuerrentRide.return && cuerrentRide.return.return){
             cantMult = 2;
           }
 
-          body += '<div class="caption">Total</div>';
-          body += "<b> PAY $ " + 
-            (((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) * (cuerrentRide.passenger_qty * cantMult)) + " USD</b>";
+          body += '<div class="caption">Pay</div>';
+          body += "<b>" + 
+            fnFormatoMoneda(((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) *
+             (cuerrentRide.passenger_qty * cantMult)) + " USD</b>";
         }
 
         if(cuerrentRide.client){
@@ -705,6 +811,10 @@ $(() => {
     }
 
     return anno + "-" + mes + "-" + dia;
+  }
+
+  function fnFormatoMoneda(number) {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(number);
   }
 
 });

@@ -94,7 +94,7 @@
                             <div class="collapse" id="mdDestino">
                                 <div class="card">      
                                     <div class="card-header text-center">
-                                        <h3>CRUISE</h3>
+                                        <h3 id="hMdDestino">CRUISE</h3>
                                         <hr>
                                     </div>                              
                                     <div class="card-body">
@@ -218,6 +218,31 @@
                                                         </div>
                                                     </div>
                                                 </script>
+                                            </div>
+                                        </div>                                        
+                                    </div>                                  
+                                </div>
+                            </div>
+                            <div class="collapse" id="mdInformacionHabitacion">
+                                <div class="card">
+                                    <div class="card-header text-center">
+                                        <h3>ROOM INFORMATION</h3>
+                                        <hr>
+                                    </div>                              
+                                    <div class="card-body">
+                                        <div class="card-text" id="cdInformacionHabitacion">
+                                            <div class="icon-grid row row-cols-xl-8 listInformacionHabitacion" style="padding-left: 50px;padding-right: 50px;">
+                                                <div class="row">
+                                                    <div class="form-group">
+                                                        <label class="form-label" for="txtRoomNumber"><strong>Room Number</strong></label>
+                                                        <input type="text" class="form-control" id="txtRoomNumber" placeholder="Enter your room number">
+                                                    </div>                                         
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group text-center row row-cols-xl-8" style="padding-left: 50px;padding-right: 40px;">
+                                                        <button id="btnBookingAirport" type="button" class="btn btn-outline-success">Booking Ride</button>
+                                                    </div>                                          
+                                                </div>
                                             </div>
                                         </div>                                        
                                     </div>                                  

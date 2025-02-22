@@ -54,6 +54,7 @@
             date: null,
             passenger_qty: null,
             pick_up_time: null,
+            room_number: null,
             return: null,            
             client: null
         }));

@@ -72,7 +72,8 @@ class GeneralService extends ConexionService{
                 t.name type,
                 s.name,
                 s.notes,
-                s.return,
+                s.return,               
+                s.room_number,
                 s.active
                 FROM services s
                 JOIN type t ON t.id = s.type_id
@@ -115,6 +116,12 @@ class GeneralService extends ConexionService{
 
         $pdo = $this->conectarBd();
 
+        $whereDate = '';
+
+        if ($date != "null") {
+            $whereDate = ' AND sdu.date = "'.$date.'"';
+        }
+
         try{
 
             $query = '
@@ -130,7 +137,6 @@ class GeneralService extends ConexionService{
                 sdu.date,
                 sdu.price,
                 sdu.additional,
-                sdu.room_number,
                 sdu.important_information_initial,
                 sdu.terms_and_conditions,
                 sdu.notes,
@@ -139,13 +145,12 @@ class GeneralService extends ConexionService{
                 JOIN services s ON s.id = sdu.service_id
                 JOIN destinys d ON d.id = sdu.destiny_id
                 JOIN type t ON t.id = d.type_id
-                WHERE sdu.active = 1 AND sdu.service_id = :service_id AND sdu.date = :date
+                WHERE sdu.active = 1 AND sdu.service_id = :service_id '.$whereDate.'
                 ORDER BY d.name;
             ';
 
             $result = $pdo->prepare($query);
             $result->bindValue(":service_id", $service_id);
-            $result->bindValue(":date", $date);
             $result->execute(); 
             
             $this->response["state"]= "ok";
