@@ -559,7 +559,7 @@ $(() => {
           return;
         }
 
-        mtdMostrarMensaje("Pago realizado!!");
+        mtdMostrarMensaje("successful payment!!");
       }
   }
 
@@ -634,8 +634,8 @@ $(() => {
           }
 
           body += '<div class="caption">Total</div>';
-          body += "PAY $ " + 
-            (((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) * (cuerrentRide.passenger_qty * cantMult)) + " USD";
+          body += "<b> PAY $ " + 
+            (((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) * (cuerrentRide.passenger_qty * cantMult)) + " USD</b>";
         }
 
         if(cuerrentRide.client){
