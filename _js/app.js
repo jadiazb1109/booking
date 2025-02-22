@@ -19,6 +19,7 @@ $(() => {
   const mdPasajero = document.getElementById('mdPasajero');
   const mdRecogida = document.getElementById('mdRecogida');
   const mdRegreso = document.getElementById('mdRegreso');
+  const mdCalendarioRegreso = document.getElementById('mdCalendarioRegreso');
   const mdInformacionContacto = document.getElementById('mdInformacionContacto');
   const mdInformacionTarjeta = document.getElementById('mdInformacionTarjeta');
 
@@ -40,7 +41,7 @@ $(() => {
     if(time_sesion > 1){
 
       if(!aviso){
-        var confirm = DevExpress.ui.dialog.confirm("<i>Deseas continuar con la reserva</i>", "¿Desea continuar?");
+        var confirm = DevExpress.ui.dialog.confirm("<i>Do you want to continue with the ride?</i>", "Keep");
         aviso = true;
         confirm.done((dialogResult) => {
             if (dialogResult) {
@@ -61,7 +62,7 @@ $(() => {
   btnBackToHome.addEventListener('click', btnBackToHomeClick);
   function btnBackToHomeClick(e) {
       e.preventDefault();   
-      var confirm = DevExpress.ui.dialog.confirm("<i>Seguro que desea salir</i>", "¿Desea salir?");
+      var confirm = DevExpress.ui.dialog.confirm("<i>Do you want to go out?</i>", "Exit");
 
       confirm.done((dialogResult) => {
           if (dialogResult) {
@@ -247,6 +248,16 @@ $(() => {
     min:new Date(),
   }).dxCalendar('instance');
 
+  const calendarReturn = $('#calendarReturn').dxCalendar({
+    value: new Date(),
+    disabled: false,
+    firstDayOfWeek: 0,
+    showWeekNumbers: false,
+    weekNumberRule: 'auto',
+    zoomLevel: 'month',
+    min:new Date(),
+  }).dxCalendar('instance');
+
 
   const txtName = document.getElementById("txtName");
   const txtPhone = document.getElementById("txtPhone");
@@ -383,14 +394,21 @@ $(() => {
                   
                       template.find('.icon-box').on('dxclick', () => {
                         btnRideBack.classList.remove("collapse");
-                        mdRegreso.classList.add("collapse");
-                        mdInformacionContacto.classList.remove("collapse");
+                        mdRegreso.classList.add("collapse");                        
                         btnRideNext.classList.remove("collapse");
-
                         cuerrentRide.steps.push("mdRegreso");
-                        cuerrentRide.current_step = "mdInformacionContacto";
-                        cuerrentRide.return = returns;                        
-                        setDataCurrentRideBooking(cuerrentRide);             
+                        cuerrentRide.return = returns;
+
+                        if (returns.return) {
+                          mdCalendarioRegreso.classList.remove("collapse");
+                          cuerrentRide.current_step = "mdCalendarioRegreso";                                                  
+                          setDataCurrentRideBooking(cuerrentRide);
+                          
+                        }else{
+                          mdInformacionContacto.classList.remove("collapse");
+                          cuerrentRide.current_step = "mdInformacionContacto";   
+                          setDataCurrentRideBooking(cuerrentRide);
+                        }                                    
                         
                       });
                   

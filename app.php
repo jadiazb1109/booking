@@ -187,6 +187,21 @@
                                     </div>                                  
                                 </div>
                             </div>
+                            <div class="collapse" id="mdCalendarioRegreso">
+                                <div class="card">
+                                    <div class="card-header text-center">
+                                        <h3>RETURN DAY</h3>
+                                        <hr>
+                                    </div>                              
+                                    <div class="card-body">
+                                        <div class="card-text" id="cdCalendarioRegreso">
+                                            <div class="icon-grid row row-cols-xl-8 listCalendarioRegreso" style="padding-left: 50px;padding-right: 50px;">
+                                                <div id="calendarReturn"></div>
+                                            </div>
+                                        </div>                                        
+                                    </div>                                  
+                                </div>
+                            </div>
                             <div class="collapse" id="mdInformacionContacto">
                                 <div class="card">
                                     <div class="card-header text-center">

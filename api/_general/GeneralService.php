@@ -178,6 +178,7 @@ class GeneralService extends ConexionService{
 
         $pdo = $this->conectarBd();
 
+        date_default_timezone_set("America/Bogota");
         $whereDate = '';
 
         if ( date($date) == date("Y-m-d")) {
