@@ -294,5 +294,138 @@ class GeneralService extends ConexionService{
         return $this->response;
           
     }
+
+    function saveBookingRide($currentRideBooking){
+
+        $pdo = $this->conectarBd();
+        
+        try{
+
+            $pdo->beginTransaction();
+
+
+            $query = '
+                    INSERT INTO booking (uuid,date,type_id,date_departure,pick_up_time,origin_id,service_id,destiny_id,passenger,state) 
+                                VALUES (:uuid,now(),:type_id,:date_departure,:pick_up_time,:origin_id,:service_id,:destiny_id,:passenger,"SCHEDULER")
+                ';
+
+            $result = $pdo->prepare($query);
+            $result->bindValue(":uuid", $currentRideBooking["uuid"]);
+            $result->bindValue(":type_id", $currentRideBooking["service"]["type_id"]);
+            $result->bindValue(":date_departure", $currentRideBooking["date"]);
+            $result->bindValue(":pick_up_time", $currentRideBooking["pick_up_time"]["time"]);
+            $result->bindValue(":origin_id", $currentRideBooking["origin"]["id"]);
+            $result->bindValue(":service_id", $currentRideBooking["service"]["id"]);
+            $result->bindValue(":destiny_id", $currentRideBooking["destiny"]["destiny_id"]);
+            $result->bindValue(":passenger", $currentRideBooking["passenger_qty"]);
+            $result->execute();
+
+            $lastInsertId =  $pdo->lastInsertId();
+
+            if ($currentRideBooking["service"]["room_number"] == 1) {
+                
+                $query = '
+                    UPDATE booking SET 
+                            room_number = :room_number
+                    WHERE id = :id; 
+                ';
+
+                $result = $pdo->prepare($query);
+                $result->bindValue(":id", $lastInsertId);
+                $result->bindValue(":room_number", $currentRideBooking["room_number"]);
+                $result->execute();
+
+            }
+
+            $pdo->commit();
+
+            $this->response["estado"]= "ok";
+            $this->response["mensaje"]= "Resultado de la función saveBookingRide()";
+            $this->response["query"]= $lastInsertId;     
+
+        }catch(PDOException $e){
+
+            $logModel = new LogModel();
+
+            $logModel->_set("method","GeneralService/saveBookingRide()");
+            $logModel->_set("query",$query);
+            $logModel->_set("code",$e->getCode());
+            $logModel->_set("error",$e->getMessage());
+
+            $logModel->_set("id",$this->guardarLogErrores($logModel));
+
+            $this->response["state"]= "ko";
+            $this->response["message"]= "Error al ejecutar la sentencia. Codigo: ".$logModel->_get("id");
+            $this->response["query"]= [];
+        } 
+
+        $pdo = $this->desconectarBd();
+
+        return $this->response;
+    }
+
+    function listBookingActivosxTypeId2(){
+
+        $pdo = $this->conectarBd();
+
+        try{
+
+            $query = '
+                SELECT
+                b.id,
+                b.uuid,
+                b.date,
+                b.type_id,
+                t.name type,
+                b.date_departure,
+                b.pick_up_time,
+                TIME_FORMAT(b.pick_up_time , "%h:%i %p")pick_up_time_format,
+                b.origin_id,
+                o.name origin,
+                b.service_id,
+                s.name service,
+                b.destiny_id,
+                d.name destiny,
+                b.passenger,
+                b.room_number,
+                b.state,
+                b.active
+                FROM booking b
+                JOIN type t ON t.id = b.type_id
+                JOIN origins o ON o.id = b.origin_id
+                JOIN services s ON s.id = b.service_id
+                JOIN destinys d ON d.id = b.destiny_id
+                WHERE b.type_id = 2 AND b.date_departure = DATE_FORMAT(NOW(),"%Y-%m-%d") AND b.active = 1
+                ORDER BY b.pick_up_time;
+            ';
+
+            $result = $pdo->prepare($query);
+            $result->execute(); 
+            
+            $this->response["state"]= "ok";
+            $this->response["message"]= "Resultado de la función listBookingActivosxTypeId2()";
+            $this->response["query"]= $result;
+           
+        }catch(PDOException $e){
+
+            $logModel = new LogModel();
+
+            $logModel->_set("method","GeneralService/listBookingActivosxTypeId2()");
+            $logModel->_set("query",$query);
+            $logModel->_set("code",$e->getCode());
+            $logModel->_set("error",$e->getMessage());
+
+            $logModel->_set("id",$this->guardarLogErrores($logModel));
+
+           $this->response["state"]= "ko";
+           $this->response["message"]= "Error al ejecutar la sentencia. Codigo: ".$logModel->_get("id");
+           $this->response["query"]= [];
+        } 
+
+        $pdo = $this->desconectarBd();
+
+        return $this->response;
+          
+    }
 }
 ?>

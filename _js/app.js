@@ -435,7 +435,8 @@ $(() => {
           crossDomain: true,
           dataType: 'json',
           error: function() { 
-              mtdMostrarMensaje("Could not complete request to server", "warning");               }
+            mtdMostrarMensaje("Could not complete request to server", "warning");
+          }
         }).done((resultado) => {
             if (resultado["state"] === 'ok') {
               if (resultado["data"].length == 0) {
@@ -642,10 +643,42 @@ $(() => {
           return;
         }
 
-        cuerrentRide.room_number = txtRoomNumber.value;
-        setDataCurrentRideBooking(cuerrentRide);
-        
-        mtdMostrarMensaje("successful booking!!");
+        var confirm = DevExpress.ui.dialog.confirm("<i>Do you want to continue with the booking?</i>", "Booking");
+        confirm.done((dialogResult) => {
+            if (dialogResult) {            
+
+              cuerrentRide.room_number = txtRoomNumber.value;
+              setDataCurrentRideBooking(cuerrentRide);
+
+              mtdActivarLoad(btnBookingAirport, "schedule...");
+
+              $.ajax({
+                url: "api/v1/general/booking/ride",
+                type: "POST",
+                dataType: 'json',
+                crossDomain: true,
+                data: JSON.stringify({
+                  currentRideBooking: cuerrentRide
+                }),
+                error: function() {
+                  mtdDesactivarLoad(btnBookingAirport, "Booking Ride");
+                  mtdMostrarMensaje("Could not complete request to server", "warning");
+                },
+              }).done((respuesta) => {
+                 
+
+                  if (respuesta["state"] === 'ok') {
+                      cuerrentRide.state = "SCHEDULER";
+                      setDataCurrentRideBooking(cuerrentRide);
+                      setTimeout(() => { location.href = "home"; }, 1000);                      
+                  }
+                  if (respuesta["state"] === 'ko') {
+                      mtdDesactivarLoad(btnBookingAirport, "Booking Ride");
+                      mtdMostrarMensaje(respuesta["message"], "error");
+                  }
+              });
+            }
+        });
       }
   }
 
@@ -819,6 +852,16 @@ $(() => {
 
   function fnFormatoMoneda(number) {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(number);
+  }
+
+  function mtdActivarLoad(boton,texto = "cargando... ") {
+    boton.innerHTML ='<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ' + texto ;
+    boton.disabled = true;
+  }
+
+  function mtdDesactivarLoad(boton,texto = "Cargar") {
+      boton.textContent = texto;
+      boton.disabled = false;
   }
 
 });
