@@ -427,5 +427,56 @@ class GeneralService extends ConexionService{
         return $this->response;
           
     }
+
+    function passengerGroupActivosxDestinyId($destiny_id){
+
+        $pdo = $this->conectarBd();
+
+        try{
+
+            $query = '
+                SELECT
+                id,
+                service_destiny_union_id,
+                passenger_min,
+                passenger_max,
+                price,
+                additional,
+                notes,
+                active
+                FROM services_destiny_union_groups
+                WHERE active = 1 AND service_destiny_union_id = :destiny_id
+                ORDER BY passenger_min;
+            ';
+
+            $result = $pdo->prepare($query);
+            $result->bindValue(":destiny_id", $destiny_id);
+            $result->execute(); 
+            
+            $this->response["state"]= "ok";
+            $this->response["message"]= "Resultado de la función serviceActivosxOriginId()";
+            $this->response["query"]= $result;
+           
+        }catch(PDOException $e){
+
+            $logModel = new LogModel();
+
+            $logModel->_set("method","GeneralService/serviceActivosxOriginId()");
+            $logModel->_set("query",$query);
+            $logModel->_set("code",$e->getCode());
+            $logModel->_set("error",$e->getMessage());
+
+            $logModel->_set("id",$this->guardarLogErrores($logModel));
+
+           $this->response["state"]= "ko";
+           $this->response["message"]= "Error al ejecutar la sentencia. Codigo: ".$logModel->_get("id");
+           $this->response["query"]= [];
+        } 
+
+        $pdo = $this->desconectarBd();
+
+        return $this->response;
+          
+    }
 }
 ?>

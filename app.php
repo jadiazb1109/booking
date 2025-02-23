@@ -111,6 +111,51 @@
                                     </div>                                  
                                 </div>
                             </div>
+                            <div class="collapse" id="mdDestinoGrupo">
+                                <div class="card">      
+                                    <div class="card-header text-center">
+                                        <h3>SELECT DESTINATION</h3>
+                                        <hr>
+                                    </div>                              
+                                    <div class="card-body">
+                                        <div class="card-text" id="cdDestinoGrupo">
+                                            <div class="icon-grid row row-cols-xl-8 listDestinoGrupo" style="padding-left: 50px;padding-right: 50px;">
+                                                <script id="property-item-destino-grupo" type="text/html">
+                                                    <div class="icon-box">
+                                                        <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                                                            <b>{{ destiny }}</b>
+                                                        </div>
+                                                    </div>
+                                                </script>
+                                            </div>
+                                        </div>                                        
+                                    </div>                                  
+                                </div>
+                            </div>
+                            <div class="collapse" id="mdPasajeroGrupo">
+                                <div class="card">      
+                                    <div class="card-header text-center">
+                                        <h3>NUMBER OF PASSENGERS</h3>
+                                        <hr>
+                                    </div>                              
+                                    <div class="card-body">
+                                        <div class="card-text" id="cdPasajeroGrupo">
+                                            <div class="icon-grid row row-cols-xl-8 listPasajeroGrupo" style="padding-left: 50px;padding-right: 50px;">
+                                                <script id="property-item-pasajero-grupo" type="text/html">
+                                                    <div class="icon-box">
+                                                        <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                                                            <b>
+                                                                {{ passenger_min }} - {{ passenger_max }} PASSENGERS <br>
+                                                                $ {{ price }} ONE WAY
+                                                            </b>
+                                                        </div>
+                                                    </div>
+                                                </script>
+                                            </div>
+                                        </div>                                        
+                                    </div>                                  
+                                </div>
+                            </div>
                             <div class="collapse" id="mdPasajero">
                                 <div class="card">
                                     <div class="card-header text-center">
@@ -257,6 +302,10 @@
                                         <div class="card-text" id="cdInformacionContacto">
                                             <div class="icon-grid row row-cols-xl-8 listInformacionContacto" style="padding-left: 50px;padding-right: 50px;">
                                                 <div class="row">
+                                                    <div class="form-group collapse" id="divNameDistiny">
+                                                        <label class="form-label" for="txtName" id="lblNameDestiny"><strong>Name</strong></label>
+                                                        <input type="text" class="form-control" id="txtNameDestiny" placeholder="Enter your destiny">
+                                                    </div>
                                                     <div class="form-group">
                                                         <label class="form-label" for="txtName"><strong>Name</strong></label>
                                                         <input type="text" class="form-control" id="txtName" placeholder="Enter your name">

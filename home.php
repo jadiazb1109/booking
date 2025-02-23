@@ -58,6 +58,7 @@
             destiny: null,
             date: null,
             passenger_qty: null,
+            passenger_group: null,
             pick_up_time: null,
             room_number: null,
             return: null,            

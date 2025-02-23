@@ -193,3 +193,30 @@ $api->get('/v1/general/listBooking/type/2', function () use ($api) {
         echoResponse(200, $response);
     }  
 });
+
+$api->get('/v1/general/passengerGroupActive/destiny/:destiny_id', function ($destiny_id) use ($api) {
+
+    $generalService = new GeneralService();
+
+    $resp = $generalService->passengerGroupActivosxDestinyId($destiny_id);
+
+    if ($resp["state"] == "ok") {
+
+        $datos = $resp["query"]->fetchAll(PDO::FETCH_ASSOC);      
+        
+        $response["state"] = "ok";
+        $response["message"]= "No data to display" ; 
+        $response["data"] = $datos;
+
+        if($resp["query"]->rowCount() > 0) 
+            $response["message"] = "List of active passenger group x destiny_id: ". $destiny_id; 
+
+        echoResponse(200, $response);            
+    }else{
+        $response["state"]= "ko";
+        $response["message"]= $resp["message"];
+        $response["data"] = [];
+
+        echoResponse(200, $response);
+    }  
+});

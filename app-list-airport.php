@@ -26,8 +26,7 @@
             body {                
                 
                 font-family: Arial, sans-serif;
-                text-align: center;
-                
+                text-align: center;                
                 color: white;
             }
             .container {

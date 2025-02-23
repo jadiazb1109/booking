@@ -16,7 +16,9 @@ $(() => {
   const mdServicio = document.getElementById('mdServicio');
   const mdCalendario = document.getElementById('mdCalendario');
   const mdDestino = document.getElementById('mdDestino');
+  const mdDestinoGrupo = document.getElementById('mdDestinoGrupo');
   const mdPasajero = document.getElementById('mdPasajero');
+  const mdPasajeroGrupo = document.getElementById('mdPasajeroGrupo');
   const mdRecogida = document.getElementById('mdRecogida');
   const mdRegreso = document.getElementById('mdRegreso');
   const mdCalendarioRegreso = document.getElementById('mdCalendarioRegreso');
@@ -105,13 +107,29 @@ $(() => {
         btnRideNext.classList.add("collapse");    
       }
 
-      if(cuerrentRide.current_step == "mdCalendario"){
+      if(cuerrentRide.current_step == "mdCalendario" && (cuerrentRide.service.type_id == 1 || cuerrentRide.service.type_id == 2)){
         btnRideNext.classList.remove("collapse");    
         $('.listDestino').html(`                    
           <script id="property-item-destino" type="text/html">
               <div class="icon-box">
                   <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
                       <b>{{ destiny }}</b>
+                  </div>
+              </div>
+          </script>
+      `);
+      }
+
+      if(cuerrentRide.current_step == "mdCalendario" && cuerrentRide.service.type_id == 4){
+        btnRideNext.classList.remove("collapse");    
+        $('.listPasajeroGrupo').html(`                    
+          <script id="property-item-pasajero-grupo" type="text/html">
+              <div class="icon-box">
+                  <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                      <b>
+                        {{ passenger_min }} - {{ passenger_max }} PASSENGERS <br>
+                        $ {{ price }} ONE WAY
+                      </b>
                   </div>
               </div>
           </script>
@@ -191,6 +209,7 @@ $(() => {
             cuerrentRide.destiny= null,
             cuerrentRide.date= null,
             cuerrentRide.passenger_qty= null,
+            cuerrentRide.passenger_group =null,
             cuerrentRide.pick_up_time= null,
             cuerrentRide.return= null,            
             cuerrentRide.client= null,
@@ -231,18 +250,74 @@ $(() => {
                     template.find('.icon-box').on('dxclick', () => {
                       cuerrentRide.steps.push("mdServicio");
                       cuerrentRide.service = service;
+                      cuerrentRide.passenger_qty= null,
+                      cuerrentRide.passenger_group =null,
                       cuerrentRide.room_number= null,
                       txtPassengerQty.textContent = 0;
-                      items = 0;
-                      cuerrentRide.current_step = "mdCalendario";
-                      setDataCurrentRideBooking(cuerrentRide);
+                      items = 0;                      
 
                       if(service.type_id == 1 || service.type_id == 2){
+                        cuerrentRide.current_step = "mdCalendario";
+                        setDataCurrentRideBooking(cuerrentRide);
                         btnRideBack.classList.remove("collapse");
                         mdServicio.classList.add("collapse");
                         mdCalendario.classList.remove("collapse");
                         btnRideNext.classList.remove("collapse");
-                      }                       
+                      }    
+                      if(service.type_id == 4){
+                        cuerrentRide.current_step = "mdDestinoGrupo";
+                        setDataCurrentRideBooking(cuerrentRide);
+                        btnRideBack.classList.remove("collapse");
+                        mdServicio.classList.add("collapse");
+                        mdDestinoGrupo.classList.remove("collapse");
+                        btnRideNext.classList.remove("collapse");
+
+                        $.ajax({
+                          url: "api/v1/general/destinyUnionActive/service/" + cuerrentRide.service.id + "/date/null",
+                          type: "GET",
+                          crossDomain: true,
+                          dataType: 'json',
+                          error: function() { 
+                              mtdMostrarMensaje("Could not complete request to server", "warning");               }
+                        }).done((resultado) => {
+                            if (resultado["state"] === 'ok') {
+                              if (resultado["data"].length == 0) {
+                                mtdMostrarMensaje(resultado["message"], "warning"); 
+                              
+                                $('.listDestinoGrupo').html(`                    
+                                    <script id="property-item-destino-grupo" type="text/html">
+                                        <div class="icon-box">
+                                            <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                                                <b>{{ destiny }}</b>
+                                            </div>
+                                        </div>
+                                    </script>
+                                `);
+                              }
+                              $.each(resultado["data"], (index, destiny) => {
+                                const template = $(Mustache.render($('#property-item-destino-grupo').html(), destiny));
+                            
+                                template.find('.icon-box').on('dxclick', () => {
+                
+                                  cuerrentRide.steps.push("mdDestinoGrupo");
+                                  cuerrentRide.destiny = destiny;
+                                  cuerrentRide.current_step = "mdCalendario";
+                                  setDataCurrentRideBooking(cuerrentRide);
+                                  btnRideBack.classList.remove("collapse");
+                                  mdDestinoGrupo.classList.add("collapse");
+                                  mdCalendario.classList.remove("collapse");
+                                  btnRideNext.classList.remove("collapse");
+                                  txtNameDestiny.value = null;
+                                });
+                            
+                                $('.listDestinoGrupo').append(template);
+                              });
+                            }
+                            if (resultado["state"] === 'ko') {
+                                mtdMostrarMensaje(resultado["message"], "error");
+                            }
+                        });
+                      }                     
                     });
                 
                     $('.listServicio').append(template);
@@ -284,7 +359,20 @@ $(() => {
     min:new Date(),
   }).dxCalendar('instance');
 
+  const calendarGrupo = $('#calendarGrupo').dxCalendar({
+    value: new Date(),
+    disabled: false,
+    firstDayOfWeek: 0,
+    showWeekNumbers: false,
+    weekNumberRule: 'auto',
+    zoomLevel: 'month',
+    min:new Date(),
+  }).dxCalendar('instance');
 
+
+  const divNameDistiny = document.getElementById("divNameDistiny");
+  const lblNameDestiny = document.getElementById("lblNameDestiny");
+  const txtNameDestiny = document.getElementById("txtNameDestiny");
   const txtName = document.getElementById("txtName");
   const txtPhone = document.getElementById("txtPhone");
   const txtEmail = document.getElementById("txtEmail");
@@ -413,6 +501,126 @@ $(() => {
         });
       }
 
+      if(cuerrentRide.current_step == "mdCalendario" && cuerrentRide.service.type_id == 4){
+
+        let departureSelect = fnFechaFormatear(calendar.option('value'));
+        
+        cuerrentRide.steps.push("mdCalendario");      
+        cuerrentRide.date = departureSelect;
+        cuerrentRide.current_step = "mdPasajeroGrupo";
+        setDataCurrentRideBooking(cuerrentRide);
+        btnRideBack.classList.remove("collapse");
+        mdCalendario.classList.add("collapse");
+        mdPasajeroGrupo.classList.remove("collapse");
+        btnRideNext.classList.add("collapse");
+        
+        $.ajax({
+          url: "api/v1/general/passengerGroupActive/destiny/" + cuerrentRide.destiny.id,
+          type: "GET",
+          crossDomain: true,
+          dataType: 'json',
+          error: function() { 
+              mtdMostrarMensaje("Could not complete request to server", "warning");               }
+        }).done((resultado) => {
+            if (resultado["state"] === 'ok') {
+              if (resultado["data"].length == 0) {
+                mtdMostrarMensaje(resultado["message"], "warning"); 
+              
+                $('.listPasajeroGrupo').html(`                    
+                    <script id="property-item-pasajero-grupo" type="text/html">
+                        <div class="icon-box">
+                            <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                                <b>
+                                  {{ passenger_min }} - {{ passenger_max }} PASSENGERS <br>
+                                  $ {{ price }} ONE WAY
+                                </b>
+                            </div>
+                        </div>
+                    </script>
+                `);
+              }
+              $.each(resultado["data"], (index, passenger) => {
+                const template = $(Mustache.render($('#property-item-pasajero-grupo').html(), passenger));
+            
+                template.find('.icon-box').on('dxclick', () => {
+
+                  cuerrentRide.steps.push("mdPasajeroGrupo");
+                  cuerrentRide.passenger_qty = 1;
+                  cuerrentRide.passenger_group = passenger;
+                  cuerrentRide.current_step = "mdRecogida";
+                  setDataCurrentRideBooking(cuerrentRide);
+                  btnRideBack.classList.remove("collapse");
+                  mdPasajeroGrupo.classList.add("collapse");
+                  mdRecogida.classList.remove("collapse");
+                  btnRideNext.classList.add("collapse"); 
+
+                  $.ajax({
+                    url: "api/v1/general/pickUpTimeActive/service/" + cuerrentRide.service.id + "/date/" + cuerrentRide.date,
+                    type: "GET",
+                    crossDomain: true,
+                    dataType: 'json',
+                    error: function() { 
+                      mtdMostrarMensaje("Could not complete request to server", "warning");
+                    }
+                  }).done((resultado) => {
+                      if (resultado["state"] === 'ok') {
+                        if (resultado["data"].length == 0) {
+                          mtdMostrarMensaje(resultado["message"], "warning"); 
+                        
+                          $('.listRecogida').html(`                    
+                              <script id="property-item-recogida" type="text/html">
+                                  <div class="icon-box">
+                                      <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                                          <b>{{ time_format }}</b>
+                                      </div>
+                                  </div>
+                              </script>
+                          `);
+                        }
+                        $.each(resultado["data"], (index, pickUpTime) => {
+                          const template = $(Mustache.render($('#property-item-recogida').html(), pickUpTime));
+                      
+                          template.find('.icon-box').on('dxclick', () => {
+                            cuerrentRide.steps.push("mdRecogida");
+                            cuerrentRide.pick_up_time = pickUpTime;
+                            cuerrentRide.current_step = "mdInformacionContacto";
+                            setDataCurrentRideBooking(cuerrentRide);  
+                            btnRideBack.classList.remove("collapse");
+                            mdRecogida.classList.add("collapse");
+                            mdInformacionContacto.classList.remove("collapse");
+                            btnRideNext.classList.remove("collapse");
+
+                            divNameDistiny.classList.remove("collapse");
+
+                            if (cuerrentRide.destiny.destiny.includes("AIRPORT")) {
+                              lblNameDestiny.innerHTML = "<strong>Airline Name</strong>";
+                            }else{
+                              lblNameDestiny.innerHTML = "<strong>Cruise Ship Name<strong>";
+                            }                                    
+                            
+                          });
+                      
+                          $('.listRecogida').append(template);
+                        });
+                      }
+                      if (resultado["state"] === 'ko') {
+                          mtdMostrarMensaje(resultado["message"], "error");
+                      }
+                  });
+
+
+
+                });
+            
+                $('.listPasajeroGrupo').append(template);
+              });
+            }
+            if (resultado["state"] === 'ko') {
+                mtdMostrarMensaje(resultado["message"], "error");
+            }
+        });
+      }
+
       if(cuerrentRide.current_step == "mdPasajero"){
 
         if (txtPassengerQty.textContent == 0) {
@@ -533,6 +741,12 @@ $(() => {
 
       if(cuerrentRide.current_step == "mdInformacionContacto"){
 
+        if (cuerrentRide.destiny.type == "GROUPS") {
+          if(!txtNameDestiny.value){
+            mtdMostrarMensaje("Enter your destiny", "error");
+            return;
+          }
+        }
         if(!txtName.value){
           mtdMostrarMensaje("Enter your name", "error");
           return;
@@ -548,7 +762,8 @@ $(() => {
 
         cuerrentRide.steps.push("mdInformacionContacto"); 
         cuerrentRide.client = {
-          name: txtName.value,
+          destiny: txtNameDestiny.value ? txtNameDestiny.value.toUpperCase() : null,
+          name: txtName.value.toUpperCase(),
           phone: txtPhone.value,
           email: txtEmail.value
         }
@@ -561,13 +776,20 @@ $(() => {
 
         let cantMult = 1;
 
-        if(cuerrentRide.return.return){
-          cantMult = 2;
+        if(cuerrentRide.return){
+          if(cuerrentRide.return.return){
+            cantMult = 2;
+          }          
         }
 
-        btnPay.textContent = "PAY " + 
-        fnFormatoMoneda(((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) *
+        if(cuerrentRide.passenger_group){           
+          btnPay.textContent = "PAY " +  fnFormatoMoneda(((cuerrentRide.passenger_group.price * 1) + (cuerrentRide.passenger_group.additional * 1)) *
            (cuerrentRide.passenger_qty * cantMult)) + " USD";
+        }else{
+          btnPay.textContent = "PAY " +  fnFormatoMoneda(((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) *
+           (cuerrentRide.passenger_qty * cantMult)) + " USD";
+        }  
+
       }
 
       if(cuerrentRide.current_step == "mdCalendarioRegreso"){
@@ -736,8 +958,11 @@ $(() => {
         }
 
         if(cuerrentRide.destiny){
+
+          let destinyClient = txtNameDestiny.value ? " ( "+txtNameDestiny.value.toUpperCase()+" )" : "";
+
           body += '<div class="caption">Destiny</div>';
-          body += cuerrentRide.destiny.destiny;         
+          body += cuerrentRide.destiny.destiny +  destinyClient ;         
         }
 
         if(cuerrentRide.pick_up_time){
@@ -760,13 +985,24 @@ $(() => {
 
         if(cuerrentRide.passenger_qty){
           body += '<div class="caption">Passenger</div>';
-          body += cuerrentRide.passenger_qty;
+
+          if(cuerrentRide.passenger_group){
+            body += cuerrentRide.passenger_group.passenger_min + " - "+ cuerrentRide.passenger_group.passenger_max;
+          }else{
+            body += cuerrentRide.passenger_qty;
+          }
+
+          
         }
 
         if(cuerrentRide.destiny && cuerrentRide.passenger_qty){
 
           body += '<div class="caption">Price</div>';
-          body +=  fnFormatoMoneda(cuerrentRide.destiny.price) +' + ('+fnFormatoMoneda(cuerrentRide.destiny.additional)+')';
+          if(cuerrentRide.passenger_group){
+            body +=  fnFormatoMoneda(cuerrentRide.passenger_group.price) +' + ('+fnFormatoMoneda(cuerrentRide.passenger_group.additional)+')';
+          }else{
+            body +=  fnFormatoMoneda(cuerrentRide.destiny.price) +' + ('+fnFormatoMoneda(cuerrentRide.destiny.additional)+')';
+          }     
 
           let cantMult = 1;
 
@@ -775,9 +1011,14 @@ $(() => {
           }
 
           body += '<div class="caption">Pay</div>';
-          body += "<b>" + 
-            fnFormatoMoneda(((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) *
+          body += "<b>";
+          if(cuerrentRide.passenger_group){           
+            body += fnFormatoMoneda(((cuerrentRide.passenger_group.price * 1) + (cuerrentRide.passenger_group.additional * 1)) *
              (cuerrentRide.passenger_qty * cantMult)) + " USD</b>";
+          }else{
+            body += fnFormatoMoneda(((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) *
+             (cuerrentRide.passenger_qty * cantMult)) + " USD</b>";
+          }          
         }
 
         if(cuerrentRide.client){
