@@ -664,8 +664,7 @@ $(() => {
                   mtdDesactivarLoad(btnBookingAirport, "Booking Ride");
                   mtdMostrarMensaje("Could not complete request to server", "warning");
                 },
-              }).done((respuesta) => {
-                 
+              }).done((respuesta) => {                 
 
                   if (respuesta["state"] === 'ok') {
                       cuerrentRide.state = "SCHEDULER";

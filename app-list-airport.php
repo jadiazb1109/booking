@@ -24,15 +24,15 @@
                 color: white;
             }
             .container {
-                margin: 50px auto;
+                margin: 20px auto;
                 width: 70%;
-                padding: 20px;
+                padding: 5px;
                 border-radius: 10px;
             }
             table {
                 width: 100%;
                 border-collapse: collapse;
-                margin-top: 20px;
+                margin-top: 10px;
                 color: white;
             }
             th, td {
