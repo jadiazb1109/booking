@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    setInterval(function() { location.reload(); }, 5000);
+
     $.ajax({
         url: "api/v1/general/listBooking/type/2",
         type: "GET",
