@@ -46,7 +46,6 @@
                                                     <div class="icon-box">
                                                         <div class="icon-box btn btn-outline-secondary" title="{{ notes }}" style="align-content: center;width: 100%;">
                                                             <b>{{ name }}</b><br>
-                                                            <small><em>{{ notes }}</em></small>
                                                         </div>
                                                     </div>
                                                 </script>

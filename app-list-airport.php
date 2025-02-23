@@ -15,25 +15,33 @@
         <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/23.2.5/css/dx.light.css">
         <script src="_js/app-list-airport.js"></script>
         <style>
-            body {
-                background-image: url('_img/ways-bg.2b326add.jpg');
-                background-size: cover;
+            html{
+                height: 100%;
+                background-image: url('_img/bg_body_4.png');
                 background-position: center;
+                background-repeat: no-repeat;
+                background-color: rgba(51, 51, 51, 0.7);
+                background-size: contain;
+            }
+            body {                
+                
                 font-family: Arial, sans-serif;
                 text-align: center;
+                
                 color: white;
             }
             .container {
                 margin: 20px auto;
                 width: 70%;
                 padding: 5px;
-                border-radius: 10px;
+                border-radius: 10px;                
             }
             table {
                 width: 100%;
                 border-collapse: collapse;
                 margin-top: 10px;
                 color: white;
+                background: rgba(0, 0, 0, 0.7);
             }
             th, td {
                 padding: 10px;
@@ -59,9 +67,9 @@
                     </tr>
                 </thead>
                 <tbody class="listReservas">    
-                        <script id="property-item-reservas" type="text/html">
-                            <tr><td>{{ pick_up_time_format }}</td><td>{{ room_number }}</td><td>{{ destiny }}</td><td>{{ passenger }}</td></tr>
-                        </script>   
+                    <script id="property-item-reservas" type="text/html">
+                        <tr><td>{{ pick_up_time_format }}</td><td>{{ room_number }}</td><td>{{ destiny }}</td><td>{{ passenger }}</td></tr>
+                    </script>   
                 </tbody>
             </table>
         </div>
