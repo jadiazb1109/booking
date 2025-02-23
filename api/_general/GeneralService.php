@@ -339,8 +339,8 @@ class GeneralService extends ConexionService{
 
             $pdo->commit();
 
-            $this->response["estado"]= "ok";
-            $this->response["mensaje"]= "Resultado de la función saveBookingRide()";
+            $this->response["state"]= "ok";
+            $this->response["message"]= "Resultado de la función saveBookingRide()";
             $this->response["query"]= $lastInsertId;     
 
         }catch(PDOException $e){
