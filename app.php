@@ -295,7 +295,7 @@
                             <div class="collapse" id="mdInformacionContacto">
                                 <div class="card">
                                     <div class="card-header text-center">
-                                        <h3>CONTAC INFORMATION</h3>
+                                        <h3>CONTACT INFORMATION</h3>
                                         <hr>
                                     </div>                              
                                     <div class="card-body">

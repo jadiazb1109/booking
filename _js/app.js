@@ -626,7 +626,12 @@ $(() => {
         if (txtPassengerQty.textContent == 0) {
           mtdMostrarMensaje("select the number of passengers", "error");
           return;
-        } 
+        }
+        
+        if (txtPassengerQty.textContent > 14) {
+          mtdMostrarMensaje("Maximum number of passengers are 14.", "error");
+          return;
+        }
 
         cuerrentRide.steps.push("mdPasajero");      
         cuerrentRide.passenger_qty = txtPassengerQty.textContent;
