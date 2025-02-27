@@ -220,3 +220,30 @@ $api->get('/v1/general/passengerGroupActive/destiny/:destiny_id', function ($des
         echoResponse(200, $response);
     }  
 });
+
+$api->get('/v1/general/listBooking/type/date/:fecha_inicial/:fecha_final', function ($fecha_inicial,$fecha_final) use ($api) {
+
+    $generalService = new GeneralService();
+
+    $resp = $generalService->listBookingActivosxTypexDate($fecha_inicial,$fecha_final);
+
+    if ($resp["state"] == "ok") {
+
+        $datos = $resp["query"]->fetchAll(PDO::FETCH_ASSOC);      
+        
+        $response["state"] = "ok";
+        $response["message"]= "No data to display" ; 
+        $response["data"] = $datos;
+
+        if($resp["query"]->rowCount() > 0) 
+            $response["message"] = "List of active booking x date: " . $fecha_inicial . " / " . $fecha_final; 
+
+        echoResponse(200, $response);            
+    }else{
+        $response["state"]= "ko";
+        $response["message"]= $resp["message"];
+        $response["data"] = [];
+
+        echoResponse(200, $response);
+    }  
+});

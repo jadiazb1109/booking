@@ -787,13 +787,24 @@ $(() => {
           }          
         }
 
-        if(cuerrentRide.passenger_group){           
-          btnPay.textContent = "PAY " +  fnFormatoMoneda(((cuerrentRide.passenger_group.price * 1) + (cuerrentRide.passenger_group.additional * 1)) *
-           (cuerrentRide.passenger_qty * cantMult)) + " USD";
+        let currentPay = 0;
+
+        if(cuerrentRide.passenger_group){    
+          
+          currentPay = (((cuerrentRide.passenger_group.price * 1) + (cuerrentRide.passenger_group.additional * 1)) *
+          (cuerrentRide.passenger_qty * cantMult));
+
         }else{
-          btnPay.textContent = "PAY " +  fnFormatoMoneda(((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) *
-           (cuerrentRide.passenger_qty * cantMult)) + " USD";
+
+          currentPay = (((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) *
+          (cuerrentRide.passenger_qty * cantMult));
+          
         }  
+
+        btnPay.textContent = "PAY " +  fnFormatoMoneda(currentPay) + " USD";
+
+        cuerrentRide.pay = currentPay;
+        setDataCurrentRideBooking(cuerrentRide);
 
       }
 
@@ -875,6 +886,7 @@ $(() => {
             if (dialogResult) {            
 
               cuerrentRide.room_number = txtRoomNumber.value;
+              cuerrentRide.pay = 0;
               setDataCurrentRideBooking(cuerrentRide);
 
               mtdActivarLoad(btnBookingAirport, "schedule...");
@@ -922,7 +934,43 @@ $(() => {
           return;
         }
 
-        mtdMostrarMensaje("successful payment!!");
+        var confirm = DevExpress.ui.dialog.confirm("<i>Do you want to continue with the booking?</i>", "Booking");
+        confirm.done((dialogResult) => {
+            if (dialogResult) {            
+
+              cuerrentRide.room_number = txtRoomNumber.value;
+              setDataCurrentRideBooking(cuerrentRide);
+
+              let buttonText = btnPay.textContent;
+
+              mtdActivarLoad(btnPay, "schedule...");
+
+              $.ajax({
+                url: "api/v1/general/booking/ride",
+                type: "POST",
+                dataType: 'json',
+                crossDomain: true,
+                data: JSON.stringify({
+                  currentRideBooking: cuerrentRide
+                }),
+                error: function() {
+                  mtdDesactivarLoad(btnPay, buttonText);
+                  mtdMostrarMensaje("Could not complete request to server", "warning");
+                },
+              }).done((respuesta) => {                 
+
+                  if (respuesta["state"] === 'ok') {
+                      cuerrentRide.state = "SCHEDULER";
+                      setDataCurrentRideBooking(cuerrentRide);
+                      setTimeout(() => { location.href = "home"; }, 1000);                      
+                  }
+                  if (respuesta["state"] === 'ko') {
+                      mtdDesactivarLoad(btnPay, buttonText);
+                      mtdMostrarMensaje(respuesta["message"], "error");
+                  }
+              });
+            }
+        });
       }
   }
 
