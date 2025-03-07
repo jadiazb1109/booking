@@ -7,7 +7,7 @@
         <meta name="author" content="">
         <link rel="icon" href="_img/icono.png">
 
-        <title>HR - List</title>
+        <title>HR - Airport Shuttle List</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>window.jQuery || document.write(decodeURIComponent('%3Cscript src="js/jquery.min.js"%3E%3C/script%3E'))</script>
         <script src="https://unpkg.com/mustache@4.2.0/mustache.min.js"></script>
@@ -20,7 +20,7 @@
                 background-image: url('_img/bg_body_4.png');
                 background-position: center;
                 background-repeat: no-repeat;
-                background-color: rgba(51, 51, 51, 0.7);
+                background-color: #05384D;
                 background-size: contain;
             }
             body {                

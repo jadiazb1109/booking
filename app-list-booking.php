@@ -7,7 +7,7 @@
         <meta name="author" content="">
         <link rel="icon" href="_img/icono.png">
 
-        <title>HR - List</title>
+        <title>HR - Booking List</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>window.jQuery || document.write(decodeURIComponent('%3Cscript src="js/jquery.min.js"%3E%3C/script%3E'))</script>
         <script src="https://unpkg.com/mustache@4.2.0/mustache.min.js"></script>
@@ -28,7 +28,7 @@
                 font-family: Arial, sans-serif;
                 text-align: center;                
                 color: black;
-                background-color: rgba(197, 197, 197, 0.7);
+                background-color: #05384D;
             }
             .container {
                 margin: 10px auto;
@@ -40,7 +40,7 @@
     </head>
     <body>
         <div class="container">
-            <h1>BOOKING</h1>
+            <h1 style="color:#FFFFFF"><b>BOOKING</b></h1>
             <div>
                 <div class="form-group row">
                     <div class="col-lg-2"></div>
@@ -54,19 +54,23 @@
                     </div>
                     <div class="col-lg-1">
                         <br>
-                        <button id="btnGenerar"  class="btn btn-outline-secondary" >search</button>                                                
+                        <button id="btnGenerar"  class="btn btn-outline-light" >Search</button>                                                
                     </div>
                     <div class="col-lg-1">
                         <br>
-                        <button id="btnExportar"  class="btn btn-outline-secondary" >Export</button>                                                
+                        <button id="btnExportar"  class="btn btn-outline-light" >Export</button>                                                
                     </div>
                     <div class="col-lg-2">
                         <br>
-                        <a id="btnAirportShuttleList" class="btn btn-outline-secondary" href="app-list-airport" target="_blank">Airport Shuttle List</a>                                         
+                        <a id="btnAirportShuttleList" class="btn btn-outline-light" href="app-list-airport" target="_blank">Airport Shuttle List</a>                                         
                     </div>
                 </div>
                 <br>
-                <div id="grdDatos"></div>
+                <div class="card">
+                    <div class="card-body">
+                        <div id="grdDatos"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </body>

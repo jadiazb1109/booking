@@ -37,4 +37,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function mtdMostrarMensaje(mensaje, tipo = "success", time = 3000) {
+
+        let direction = "down-push";
+        let position = "top right";
+    
+        DevExpress.ui.notify({
+            message: mensaje,
+            width: 400,
+            type: tipo,
+            displayTime: time,
+        }, {
+            position,
+            direction
+        });
+    }
+
 });

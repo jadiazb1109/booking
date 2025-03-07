@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var grdDatos = $("#grdDatos").dxDataGrid({
         columns: [{
                 dataField: "id",
-                visible: false
+                caption: "Number"
             },
             "date", "type",{
                 dataField: "date_departure",
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function mtdMostrarMensaje(mensaje, tipo = "success", time = 3000) {
 
         let direction = "down-push";
-        let position = "booton center";
+        let position = "top right";
     
         DevExpress.ui.notify({
             message: mensaje,

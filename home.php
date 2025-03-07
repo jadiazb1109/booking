@@ -83,7 +83,7 @@
         }        
 
         function mtdMostrarMensaje(mensaje, tipo = "success", time = 3000) {
-            let direction = "down-push";
+            let direction = "up-push";
             let position = "top center";
 
             DevExpress.ui.notify({

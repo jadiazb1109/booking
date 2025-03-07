@@ -2,8 +2,10 @@
 .modal-header{
     padding: inherit !important;
 }
+body,
+.card-body,
 .modal-body{
-    background-color: #E9E9E9;
+    background-color: #4a788b;
 }
 .modal-footer {
     justify-content: space-between;
@@ -11,6 +13,7 @@
 
 .dx-popup-content {
   font-size: 18px;
+  
 }
 
 .caption {
