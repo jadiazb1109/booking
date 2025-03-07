@@ -95,7 +95,7 @@ $(() => {
         $('.listServicio').html(`                    
           <script id="property-item-servicio" type="text/html">
               <div class="icon-box">
-                  <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                  <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
                       <b>{{ name }}</b>
                   </div>
               </div>
@@ -112,7 +112,7 @@ $(() => {
         $('.listDestino').html(`                    
           <script id="property-item-destino" type="text/html">
               <div class="icon-box">
-                  <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                  <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
                       <b>{{ destiny }}</b>
                   </div>
               </div>
@@ -125,7 +125,7 @@ $(() => {
         $('.listPasajeroGrupo').html(`                    
           <script id="property-item-pasajero-grupo" type="text/html">
               <div class="icon-box">
-                  <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                  <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
                       <b>
                         {{ passenger_min }} - {{ passenger_max }} PASSENGERS <br>
                         $ {{ price }} ONE WAY
@@ -145,7 +145,7 @@ $(() => {
         $('.listRecogida').html(`                    
           <script id="property-item-recogida" type="text/html">
               <div class="icon-box">
-                  <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                  <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
                       <b>{{ time_format }}</b>
                   </div>
               </div>
@@ -166,7 +166,7 @@ $(() => {
         $('.listRecogidaRegreso').html(`                    
             <script id="property-item-recogidaRegreso" type="text/html">
                 <div class="icon-box">
-                    <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                    <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
                         <b>{{ time_format }}</b>
                     </div>
                 </div>
@@ -237,7 +237,7 @@ $(() => {
                     $('.listServicio').html(`                    
                         <script id="property-item-servicio" type="text/html">
                             <div class="icon-box">
-                                <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                                <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
                                     <b>{{ name }}</b>
                                 </div>
                             </div>
@@ -287,7 +287,7 @@ $(() => {
                                 $('.listDestinoGrupo').html(`                    
                                     <script id="property-item-destino-grupo" type="text/html">
                                         <div class="icon-box">
-                                            <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                                            <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
                                                 <b>{{ destiny }}</b>
                                             </div>
                                         </div>
@@ -410,7 +410,7 @@ $(() => {
                 $('.listDestino').html(`                    
                     <script id="property-item-destino" type="text/html">
                         <div class="icon-box">
-                            <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                            <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
                                 <b>{{ destiny }}</b>
                             </div>
                         </div>
@@ -470,7 +470,7 @@ $(() => {
                 $('.listDestino').html(`                    
                     <script id="property-item-destino" type="text/html">
                         <div class="icon-box">
-                            <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                            <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
                                 <b>{{ destiny }}</b>
                             </div>
                         </div>
@@ -529,7 +529,7 @@ $(() => {
                 $('.listPasajeroGrupo').html(`                    
                     <script id="property-item-pasajero-grupo" type="text/html">
                         <div class="icon-box">
-                            <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                            <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
                                 <b>
                                   {{ passenger_min }} - {{ passenger_max }} PASSENGERS <br>
                                   $ {{ price }} ONE WAY
@@ -570,7 +570,7 @@ $(() => {
                           $('.listRecogida').html(`                    
                               <script id="property-item-recogida" type="text/html">
                                   <div class="icon-box">
-                                      <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                                      <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
                                           <b>{{ time_format }}</b>
                                       </div>
                                   </div>
@@ -658,7 +658,7 @@ $(() => {
                 $('.listRecogida').html(`                    
                     <script id="property-item-recogida" type="text/html">
                         <div class="icon-box">
-                            <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                            <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
                                 <b>{{ time_format }}</b>
                             </div>
                         </div>
@@ -684,7 +684,7 @@ $(() => {
                       $('.listRegreso').html(`                    
                         <script id="property-item-regreso" type="text/html">
                             <div class="icon-box">
-                                <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                                <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
                                     <b>{{ option }}</b>
                                 </div>
                             </div>
@@ -835,7 +835,7 @@ $(() => {
                 $('.listRecogidaRegreso').html(`                    
                     <script id="property-item-recogidaRegreso" type="text/html">
                         <div class="icon-box">
-                            <div class="icon-box btn btn-outline-secondary" style="align-content: center;width: 100%;">
+                            <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
                                 <b>{{ time_format }}</b>
                             </div>
                         </div>
