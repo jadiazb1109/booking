@@ -17,6 +17,8 @@ $(() => {
   const mdCalendario = document.getElementById('mdCalendario');
   const mdDestino = document.getElementById('mdDestino');
   const mdDestinoGrupo = document.getElementById('mdDestinoGrupo');
+  const mdInformacionImportante = document.getElementById('mdInformacionImportante');
+  const mdInformacionTerminos = document.getElementById('mdInformacionTerminos');
   const mdPasajero = document.getElementById('mdPasajero');
   const mdPasajeroGrupo = document.getElementById('mdPasajeroGrupo');
   const mdRecogida = document.getElementById('mdRecogida');
@@ -107,7 +109,7 @@ $(() => {
         btnRideNext.classList.add("collapse");    
       }
 
-      if(cuerrentRide.current_step == "mdCalendario" && (cuerrentRide.service.type_id == 1 || cuerrentRide.service.type_id == 2)){
+      if(cuerrentRide.current_step == "mdCalendario" && (cuerrentRide.service.type_id == 1 || cuerrentRide.service.type_id == 2 || cuerrentRide.service.type_id == 3)){
         btnRideNext.classList.remove("collapse");    
         $('.listDestino').html(`                    
           <script id="property-item-destino" type="text/html">
@@ -256,7 +258,7 @@ $(() => {
                       txtPassengerQty.textContent = 0;
                       items = 0;                      
 
-                      if(service.type_id == 1 || service.type_id == 2){
+                      if(service.type_id == 1 || service.type_id == 2 || service.type_id == 3){
                         cuerrentRide.current_step = "mdCalendario";
                         setDataCurrentRideBooking(cuerrentRide);
                         btnRideBack.classList.remove("collapse");
@@ -731,6 +733,15 @@ $(() => {
                     }
                     
                   }
+
+                  if (cuerrentRide.service.type_id == 3) {
+                      cuerrentRide.current_step = "mdInformacionTerminos";
+                      setDataCurrentRideBooking(cuerrentRide);  
+                      btnRideBack.classList.remove("collapse");
+                      mdRecogida.classList.add("collapse");
+                      mdInformacionTerminos.classList.remove("collapse");
+                      btnRideNext.classList.remove("collapse");                    
+                  }
                   
                 });
             
@@ -874,6 +885,90 @@ $(() => {
                 mtdMostrarMensaje(resultado["message"], "error");
             }
         });
+      }
+
+      if(cuerrentRide.current_step == "mdCalendario" && cuerrentRide.service.type_id == 3){
+
+        hMdDestino.textContent = "TOURS";
+        let departureSelect = fnFechaFormatear(calendar.option('value'));
+        
+        cuerrentRide.steps.push("mdCalendario");      
+        cuerrentRide.date = departureSelect;
+        cuerrentRide.current_step = "mdDestino";
+        setDataCurrentRideBooking(cuerrentRide);
+        btnRideBack.classList.remove("collapse");
+        mdCalendario.classList.add("collapse");
+        mdDestino.classList.remove("collapse");
+        btnRideNext.classList.add("collapse");
+        
+        $.ajax({
+          url: "api/v1/general/destinyUnionActive/service/" + cuerrentRide.service.id + "/date/null",
+          type: "GET",
+          crossDomain: true,
+          dataType: 'json',
+          error: function() { 
+              mtdMostrarMensaje("Could not complete request to server", "warning");               }
+        }).done((resultado) => {
+            if (resultado["state"] === 'ok') {
+              if (resultado["data"].length == 0) {
+                mtdMostrarMensaje(resultado["message"], "warning"); 
+              
+                $('.listDestino').html(`                    
+                    <script id="property-item-destino" type="text/html">
+                        <div class="icon-box">
+                            <div class="icon-box btn btn-outline-warning" style="align-content: center;width: 100%;">
+                                <b>{{ destiny }}</b>
+                            </div>
+                        </div>
+                    </script>
+                `);
+              }
+              $.each(resultado["data"], (index, destiny) => {
+                const template = $(Mustache.render($('#property-item-destino').html(), destiny));
+            
+                template.find('.icon-box').on('dxclick', () => {
+
+                  cuerrentRide.steps.push("mdDestino");
+                  cuerrentRide.destiny = destiny;
+                  cuerrentRide.current_step = "mdInformacionImportante";
+                  setDataCurrentRideBooking(cuerrentRide);
+                  btnRideBack.classList.remove("collapse");
+                  mdDestino.classList.add("collapse");
+                  mdInformacionImportante.classList.remove("collapse");
+                  btnRideNext.classList.remove("collapse");
+                });
+            
+                $('.listDestino').append(template);
+              });
+            }
+            if (resultado["state"] === 'ko') {
+                mtdMostrarMensaje(resultado["message"], "error");
+            }
+        });
+      }
+
+      if(cuerrentRide.current_step == "mdInformacionImportante"){
+
+        cuerrentRide.steps.push("mdInformacionImportante");
+        cuerrentRide.current_step = "mdPasajero";
+        setDataCurrentRideBooking(cuerrentRide);
+        btnRideBack.classList.remove("collapse");
+        mdInformacionImportante.classList.add("collapse");
+        mdPasajero.classList.remove("collapse");
+        btnRideNext.classList.remove("collapse");
+
+      }
+
+      if(cuerrentRide.current_step == "mdInformacionTerminos"){
+
+        cuerrentRide.steps.push("mdInformacionTerminos");
+        cuerrentRide.current_step = "mdInformacionContacto";
+        setDataCurrentRideBooking(cuerrentRide);
+        btnRideBack.classList.remove("collapse");
+        mdInformacionTerminos.classList.add("collapse");
+        mdInformacionContacto.classList.remove("collapse");
+        btnRideNext.classList.remove("collapse");
+
       }
   }
 

@@ -132,6 +132,68 @@
                                     </div>                                  
                                 </div>
                             </div>
+                            <div class="collapse" id="mdInformacionImportante">
+                                <div class="card">
+                                    <div class="card-header text-center">
+                                        <h3>IMPORTANT INFORMATION</h3>
+                                        <hr>
+                                    </div>                              
+                                    <div class="card-body">
+                                        <div class="card-text" id="cdInformacionImportante">
+                                            <div class="icon-grid row row-cols-xl-8 listInformacionImportante" style="padding-left: 50px;padding-right: 50px;">
+                                                <div class="row">
+                                                    <p class="text-center class-p">THE COST PER PERSON IS ADULTS AND KIDS</p>
+                                                    <p class="class-p">
+                                                        The everglades airboat tour includes tickets to the park and transportation round trip. The Tour last
+                                                        approximately 3 hours including transportation. Where is the tour? At the Everglades Holiday Park in Fort
+                                                        Lauderdale.
+                                                    </p>
+                                                    <p class="class-p">
+                                                        All tickets are first come first serve at park. Wait times may be expected to board the airboat, so please
+                                                        plan accordingly. We are no responsible for delays, mechanicals, missing flights, etc.
+                                                    </p>                                   
+                                                </div>
+                                            </div>
+                                        </div>                                        
+                                    </div>                                  
+                                </div>
+                            </div>
+                            <div class="collapse" id="mdInformacionTerminos">
+                                <div class="card">
+                                    <div class="card-header text-center">
+                                        <h3>IMPORTANT INFORMATION</h3>
+                                        <hr>
+                                    </div>                              
+                                    <div class="card-body">
+                                        <div class="card-text" id="cdInformacionTerminos">
+                                            <div class="icon-grid row row-cols-xl-8 listInformacionTerminos" style="padding-left: 50px;padding-right: 50px;">
+                                                <div class="row">
+                                                    <p class="text-center class-p"><b>TERMS AND CONDITIONS – WAIVER</b></p>
+                                                    <p class="text-center class-p"><b>WAIVER, INDEMNITY, AND RELEASE OF LIABILITY</b></p>
+                                                    <p class="class-p">
+                                                        Passenger expressly acknowledges and agrees that the airboat tour involves some risks, and passenger
+                                                        hereby knowingly, freely, and voluntarily assumes all risk and liability for any death, bodily injury,
+                                                        damage, property damage, harm, loss and/or injury that results or may result directly or indirectly from
+                                                        Passenger’s or Passenger’s child/ward’s participation in the activity described herein, and further agrees
+                                                        to release, waive, discharge, and covenant not to sue Ways Shuttle Solutions LLC, G & D Tours and
+                                                        Transportation, The Clint Corporation, Bridges Everglades, LLC d/b/a Everglades Holiday Park, BigBig,
+                                                        Inc., Everglades VIP, LLC, Everglades Holiday Park, Inc., and Broward County, their respective officers,
+                                                        agents, employees, contractors, and volunteers (all for the purposes herein referred to as the
+                                                        “Releasees”) from any and all liability and causes of action whatsoever which Passenger, Passenger’s
+                                                        heirs, legal representatives and assigns may have or ever come to have against any of the Releasees due to
+                                                        Passenger’s and/or Passenger’s child/ward’s participation in the activity described herein, whether caused
+                                                        in whole or in part by the negligence of Broward County or the Releasees. Passenger further agrees to
+                                                        indemnify and hold harmless the Releasees from any and all liability, including all fees and costs,
+                                                        resulting from claims, causes of action, or losses sustained by third parties arising out of actions or
+                                                        alleged actions in connection with Passenger’s and/or Passenger’s child/ward’s participation in the
+                                                        activity described herein.
+                                                    </p>                                  
+                                                </div>
+                                            </div>
+                                        </div>                                        
+                                    </div>                                  
+                                </div>
+                            </div>
                             <div class="collapse" id="mdPasajeroGrupo">
                                 <div class="card">      
                                     <div class="card-header text-center">

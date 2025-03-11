@@ -18,9 +18,17 @@ body,
   background-color: #4a4e38;
 }
 
+.class-p,
 .form-label,
 #txtPassengerQty{
   color: #ffc107;
+}
+
+.class-p{
+  color: #fafafa;
+  font-size: 25px;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .dx-popup-content {
