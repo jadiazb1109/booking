@@ -19,6 +19,8 @@ $(() => {
   const mdDestinoGrupo = document.getElementById('mdDestinoGrupo');
   const mdInformacionImportante = document.getElementById('mdInformacionImportante');
   const mdInformacionTerminos = document.getElementById('mdInformacionTerminos');
+  const pInformacionImportante = document.getElementById('pInformacionImportante');
+  const pInformacionTerminos = document.getElementById('pInformacionTerminos');
   const mdPasajero = document.getElementById('mdPasajero');
   const mdPasajeroGrupo = document.getElementById('mdPasajeroGrupo');
   const mdRecogida = document.getElementById('mdRecogida');
@@ -736,6 +738,7 @@ $(() => {
 
                   if (cuerrentRide.service.type_id == 3) {
                       cuerrentRide.current_step = "mdInformacionTerminos";
+                      pInformacionTerminos.innerHTML = cuerrentRide.destiny.terms_and_conditions;
                       setDataCurrentRideBooking(cuerrentRide);  
                       btnRideBack.classList.remove("collapse");
                       mdRecogida.classList.add("collapse");
@@ -930,6 +933,7 @@ $(() => {
 
                   cuerrentRide.steps.push("mdDestino");
                   cuerrentRide.destiny = destiny;
+                  pInformacionImportante.innerHTML = destiny.important_information_initial;
                   cuerrentRide.current_step = "mdInformacionImportante";
                   setDataCurrentRideBooking(cuerrentRide);
                   btnRideBack.classList.remove("collapse");
