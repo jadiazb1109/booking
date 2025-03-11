@@ -5,10 +5,22 @@
 body,
 .card-body,
 .modal-body{
-    background-color: #4a788b;
+    background-color: #4a4e38;
 }
 .modal-footer {
     justify-content: space-between;
+    background-color: #4a4e38;
+}
+
+.card-header,
+.modal-header{
+  color: #ffc107;
+  background-color: #4a4e38;
+}
+
+.form-label,
+#txtPassengerQty{
+  color: #ffc107;
 }
 
 .dx-popup-content {

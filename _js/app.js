@@ -95,7 +95,7 @@ $(() => {
         $('.listServicio').html(`                    
           <script id="property-item-servicio" type="text/html">
               <div class="icon-box">
-                  <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
+                  <div class="icon-box btn btn-outline-warning" style="align-content: center;width: 100%;">
                       <b>{{ name }}</b>
                   </div>
               </div>
@@ -112,7 +112,7 @@ $(() => {
         $('.listDestino').html(`                    
           <script id="property-item-destino" type="text/html">
               <div class="icon-box">
-                  <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
+                  <div class="icon-box btn btn-outline-warning" style="align-content: center;width: 100%;">
                       <b>{{ destiny }}</b>
                   </div>
               </div>
@@ -125,7 +125,7 @@ $(() => {
         $('.listPasajeroGrupo').html(`                    
           <script id="property-item-pasajero-grupo" type="text/html">
               <div class="icon-box">
-                  <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
+                  <div class="icon-box btn btn-outline-warning" style="align-content: center;width: 100%;">
                       <b>
                         {{ passenger_min }} - {{ passenger_max }} PASSENGERS <br>
                         $ {{ price }} ONE WAY
@@ -145,7 +145,7 @@ $(() => {
         $('.listRecogida').html(`                    
           <script id="property-item-recogida" type="text/html">
               <div class="icon-box">
-                  <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
+                  <div class="icon-box btn btn-outline-warning" style="align-content: center;width: 100%;">
                       <b>{{ time_format }}</b>
                   </div>
               </div>
@@ -166,7 +166,7 @@ $(() => {
         $('.listRecogidaRegreso').html(`                    
             <script id="property-item-recogidaRegreso" type="text/html">
                 <div class="icon-box">
-                    <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
+                    <div class="icon-box btn btn-outline-warning" style="align-content: center;width: 100%;">
                         <b>{{ time_format }}</b>
                     </div>
                 </div>
@@ -237,7 +237,7 @@ $(() => {
                     $('.listServicio').html(`                    
                         <script id="property-item-servicio" type="text/html">
                             <div class="icon-box">
-                                <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
+                                <div class="icon-box btn btn-outline-warning" style="align-content: center;width: 100%;">
                                     <b>{{ name }}</b>
                                 </div>
                             </div>
@@ -287,7 +287,7 @@ $(() => {
                                 $('.listDestinoGrupo').html(`                    
                                     <script id="property-item-destino-grupo" type="text/html">
                                         <div class="icon-box">
-                                            <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
+                                            <div class="icon-box btn btn-outline-warning" style="align-content: center;width: 100%;">
                                                 <b>{{ destiny }}</b>
                                             </div>
                                         </div>
@@ -410,7 +410,7 @@ $(() => {
                 $('.listDestino').html(`                    
                     <script id="property-item-destino" type="text/html">
                         <div class="icon-box">
-                            <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
+                            <div class="icon-box btn btn-outline-warning" style="align-content: center;width: 100%;">
                                 <b>{{ destiny }}</b>
                             </div>
                         </div>
@@ -470,7 +470,7 @@ $(() => {
                 $('.listDestino').html(`                    
                     <script id="property-item-destino" type="text/html">
                         <div class="icon-box">
-                            <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
+                            <div class="icon-box btn btn-outline-warning" style="align-content: center;width: 100%;">
                                 <b>{{ destiny }}</b>
                             </div>
                         </div>
@@ -529,7 +529,7 @@ $(() => {
                 $('.listPasajeroGrupo').html(`                    
                     <script id="property-item-pasajero-grupo" type="text/html">
                         <div class="icon-box">
-                            <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
+                            <div class="icon-box btn btn-outline-warning" style="align-content: center;width: 100%;">
                                 <b>
                                   {{ passenger_min }} - {{ passenger_max }} PASSENGERS <br>
                                   $ {{ price }} ONE WAY
@@ -570,7 +570,7 @@ $(() => {
                           $('.listRecogida').html(`                    
                               <script id="property-item-recogida" type="text/html">
                                   <div class="icon-box">
-                                      <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
+                                      <div class="icon-box btn btn-outline-warning" style="align-content: center;width: 100%;">
                                           <b>{{ time_format }}</b>
                                       </div>
                                   </div>
@@ -658,7 +658,7 @@ $(() => {
                 $('.listRecogida').html(`                    
                     <script id="property-item-recogida" type="text/html">
                         <div class="icon-box">
-                            <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
+                            <div class="icon-box btn btn-outline-warning" style="align-content: center;width: 100%;">
                                 <b>{{ time_format }}</b>
                             </div>
                         </div>
@@ -684,7 +684,7 @@ $(() => {
                       $('.listRegreso').html(`                    
                         <script id="property-item-regreso" type="text/html">
                             <div class="icon-box">
-                                <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
+                                <div class="icon-box btn btn-outline-warning" style="align-content: center;width: 100%;">
                                     <b>{{ option }}</b>
                                 </div>
                             </div>
@@ -749,19 +749,29 @@ $(() => {
         if (cuerrentRide.destiny.type == "GROUPS") {
           if(!txtNameDestiny.value){
             mtdMostrarMensaje("Enter your destiny", "error");
+            txtNameDestiny.focus();
             return;
           }
         }
         if(!txtName.value){
           mtdMostrarMensaje("Enter your name", "error");
+          txtName.focus();
           return;
         }
         if(!txtPhone.value){
           mtdMostrarMensaje("Enter your phone", "error");
+          txtPhone.focus();
           return;
         }
         if(!txtEmail.value){
           mtdMostrarMensaje("Enter your email", "error");
+          txtEmail.focus();
+          return;
+        }
+
+        if (!fnValidarFromatoCorreo(txtEmail.value)) {
+          mtdMostrarMensaje("Enter a valid email", "error");
+          txtEmailA.focus();
           return;
         }
 
@@ -835,7 +845,7 @@ $(() => {
                 $('.listRecogidaRegreso').html(`                    
                     <script id="property-item-recogidaRegreso" type="text/html">
                         <div class="icon-box">
-                            <div class="icon-box btn btn-outline-light" style="align-content: center;width: 100%;">
+                            <div class="icon-box btn btn-outline-warning" style="align-content: center;width: 100%;">
                                 <b>{{ time_format }}</b>
                             </div>
                         </div>
@@ -868,6 +878,9 @@ $(() => {
   }
 
   const txtRoomNumber = document.getElementById("txtRoomNumber");
+  const txtNameA = document.getElementById("txtNameA");
+  const txtPhoneA = document.getElementById("txtPhoneA");
+  const txtEmailA = document.getElementById("txtEmailA");
   const btnBookingAirport = document.getElementById("btnBookingAirport");
 
   btnBookingAirport.addEventListener('click', btnBookingAirportClick);
@@ -878,6 +891,29 @@ $(() => {
 
         if(!txtRoomNumber.value){
           mtdMostrarMensaje("Enter your room number", "error");
+          txtRoomNumber.focus();
+          return;
+        }
+
+        if(!txtNameA.value){
+          mtdMostrarMensaje("Enter your name", "error");
+          txtNameA.focus();
+          return;
+        }
+        if(!txtPhoneA.value){
+          mtdMostrarMensaje("Enter your phone", "error");
+          txtPhoneA.focus();
+          return;
+        }
+        if(!txtEmailA.value){
+          mtdMostrarMensaje("Enter your email", "error");
+          txtEmailA.focus();
+          return;
+        }
+
+        if (!fnValidarFromatoCorreo(txtEmailA.value)) {
+          mtdMostrarMensaje("Enter a valid email", "error");
+          txtEmailA.focus();
           return;
         }
 
@@ -887,6 +923,12 @@ $(() => {
 
               cuerrentRide.room_number = txtRoomNumber.value;
               cuerrentRide.pay = 0;
+              cuerrentRide.client = {
+                destiny: null,
+                name: txtNameA.value.toUpperCase(),
+                phone: txtPhoneA.value,
+                email: txtEmailA.value
+              }
               setDataCurrentRideBooking(cuerrentRide);
 
               mtdActivarLoad(btnBookingAirport, "schedule...");
@@ -994,7 +1036,7 @@ $(() => {
       {
         const $scrollView = $('<div/>');
 
-        let body = '<div class="caption">Orignin</div>';
+        let body = '<div class="caption">Origin</div>';
 
         if(cuerrentRide.origin){
           body += cuerrentRide.origin.name;
@@ -1043,9 +1085,7 @@ $(() => {
             body += cuerrentRide.passenger_group.passenger_min + " - "+ cuerrentRide.passenger_group.passenger_max;
           }else{
             body += cuerrentRide.passenger_qty;
-          }
-
-          
+          }          
         }
 
         if(cuerrentRide.destiny && cuerrentRide.passenger_qty){
@@ -1156,5 +1196,11 @@ $(() => {
       boton.textContent = texto;
       boton.disabled = false;
   }
+
+  function fnValidarFromatoCorreo(correo) {
+    var validRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (correo.match(validRegex)) {return true;}         
+    return false;
+}
 
 });

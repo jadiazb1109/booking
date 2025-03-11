@@ -1,6 +1,7 @@
 <?php
 include_once 'GeneralService.php';
 include_once './libs/Slim/Slim.php';
+include_once './_message/EnviarCorreoService.php';
 
 $response = array(
     "state" => 0,
@@ -146,11 +147,19 @@ $api->get('/v1/general/pickUpTimeActiveReturn/service/:service_id/date/:date', f
 $api->post('/v1/general/booking/ride', function() use ($api){
 
     $request = json_decode(file_get_contents("php://input"), true);
+
+    $currentRideBooking = $request["currentRideBooking"];
     
     $generalService = new GeneralService();
 
-    $resp = $generalService->saveBookingRide($request["currentRideBooking"]);
+    $resp = $generalService->saveBookingRide($currentRideBooking);
     if ($resp["state"] == "ok") { 
+
+        $currentRideBooking["id"] = $resp["query"];
+
+        $enviarCorreoService = new EnviarCorreoService();
+    
+        $enviarCorreoService->correoPrueba($currentRideBooking);
         
         $response["state"] = "ok";
         $response["message"]= "successful booking" ; 

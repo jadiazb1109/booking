@@ -50,6 +50,7 @@
     function btnBookRideClick(e) {
         e.preventDefault();   
         localStorage.setItem("currentRideBooking", JSON.stringify({
+            id: 0,
             uuid: uuid.v4(),
             current_step: "mdOrigen",
             steps: [],

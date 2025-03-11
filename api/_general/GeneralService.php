@@ -301,6 +301,8 @@ class GeneralService extends ConexionService{
         
         try{
 
+            $lastInsertId = 0;
+
             $pdo->beginTransaction();
 
 
@@ -569,7 +571,7 @@ class GeneralService extends ConexionService{
                 JOIN destinys d ON d.id = b.destiny_id
                 WHERE b.active = 1 AND
 					b.date_departure BETWEEN :fecha_inicial AND :fecha_final 
-                ORDER BY b.date_departure,b.pick_up_time;
+                ORDER BY b.date_departure desc,b.pick_up_time;
             ';
 
             $result = $pdo->prepare($query);
