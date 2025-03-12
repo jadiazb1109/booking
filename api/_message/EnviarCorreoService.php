@@ -76,26 +76,29 @@ class EnviarCorreoService extends ConexionService{
 
             $return_str = "";
 
-            if ($currentRideBooking["return"]["date"] != null) {
-                $return_str = '
-                    <tr>
-                        <td style="height:20px; line-height:20px" height="20">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" style="font-family:"Ubuntu",Arial,sans-serif; font-size:20px; line-height:22px; font-weight:700; color:#000000" colspan="2">
-                            <font face=""Ubuntu", Arial, sans-serif"><span class="x_text-bold x_text-title">Return</span> </font>
-                        </td>
-                    </tr>    
-                    <tr>
-                        <td style="height:10px; line-height:10px" height="10">&nbsp;</td>
-                    </tr>                                                                                    
-                    <tr>
-                        <td class="x_list-icon" ><img alt="" src="https://www.rentalcars.com/images/site_graphics/newsite/outlined-tick-circle-green.png"></td>
-                        <td style="font-family:"Open sans",Arial,sans-serif; font-size:18px; line-height:20px; color:#000000">
-                            <font face=""Open sans", Arial, sans-serif"><span>&nbsp;&nbsp;'.$currentRideBooking["return"]["to"].' / '.$currentRideBooking["return"]["date"].' / '.$currentRideBooking["return"]["pick_up_time"]["time"].'</span> </font>
-                        </td>
-                    </tr>
-                ';
+            if ($currentRideBooking["return"] != null) {
+
+                if ($currentRideBooking["return"]["date"] != null) {
+                    $return_str = '
+                        <tr>
+                            <td style="height:20px; line-height:20px" height="20">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="font-family:"Ubuntu",Arial,sans-serif; font-size:20px; line-height:22px; font-weight:700; color:#000000" colspan="2">
+                                <font face=""Ubuntu", Arial, sans-serif"><span class="x_text-bold x_text-title">Return</span> </font>
+                            </td>
+                        </tr>    
+                        <tr>
+                            <td style="height:10px; line-height:10px" height="10">&nbsp;</td>
+                        </tr>                                                                                    
+                        <tr>
+                            <td class="x_list-icon" ><img alt="" src="https://www.rentalcars.com/images/site_graphics/newsite/outlined-tick-circle-green.png"></td>
+                            <td style="font-family:"Open sans",Arial,sans-serif; font-size:18px; line-height:20px; color:#000000">
+                                <font face=""Open sans", Arial, sans-serif"><span>&nbsp;&nbsp;'.$currentRideBooking["return"]["to"].' / '.$currentRideBooking["return"]["date"].' / '.$currentRideBooking["return"]["pick_up_time"]["time"].'</span> </font>
+                            </td>
+                        </tr>
+                    ';
+                }
             }
 
             $client_name = "";
