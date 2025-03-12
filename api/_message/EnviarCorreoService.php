@@ -76,7 +76,7 @@ class EnviarCorreoService extends ConexionService{
 
             $return_str = "";
 
-            if ($currentRideBooking["return"] != null) {
+            if ($currentRideBooking["return"]["date"] != null) {
                 $return_str = '
                     <tr>
                         <td style="height:20px; line-height:20px" height="20">&nbsp;</td>
