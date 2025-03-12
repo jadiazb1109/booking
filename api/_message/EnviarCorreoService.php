@@ -46,10 +46,10 @@ class EnviarCorreoService extends ConexionService{
             $mail->Port       = 587;                                    //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
             
             //Recipients
-            $mail->setFrom("info-flexwit@erp-soft.dev", "JH TRANSPORTATION");
-            $mail->addReplyTo("ing.jorgediaz@outlook.com", "JH TRANSPORTATION");
+            $mail->setFrom("info-flexwit@erp-soft.dev", "HR TRANSPORTATION");
+            $mail->addReplyTo("reservations@hrtransportation.us", "HR TRANSPORTATION");
             $mail->addAddress($currentRideBooking["client"]["email"], $currentRideBooking["client"]["name"]);     //Add a recipient
-            //$mail->addBCC($correo,$nombres);
+            $mail->addBCC("reservations@hrtransportation.us","HR TRANSPORTATION");
            
         
             //Content
@@ -451,7 +451,7 @@ class EnviarCorreoService extends ConexionService{
                                                                                                     <tbody>
                                                                                                         <tr>
                                                                                                             <td colspan="2" style="font-family:"Ubuntu",Arial,sans-serif; font-size:20px; line-height:22px; font-weight:700; color:#000000">
-                                                                                                                <font face=""Ubuntu", Arial, sans-serif"><span class="x_text-title x_text-bold">Origin</span> </font>
+                                                                                                                <font face=""Ubuntu", Arial, sans-serif"><span class="x_text-title x_text-bold"><b>Origin</b></span> </font>
                                                                                                             </td>
                                                                                                         </tr>
                                                                                                         <tr>
@@ -468,7 +468,7 @@ class EnviarCorreoService extends ConexionService{
                                                                                                         </tr>
                                                                                                         <tr>
                                                                                                             <td colspan="2" style="font-family:"Ubuntu",Arial,sans-serif; font-size:20px; line-height:22px; font-weight:700; color:#000000" colspan="2">
-                                                                                                                <font face=""Ubuntu", Arial, sans-serif"><span class="x_text-bold x_text-title">Service</span> </font>
+                                                                                                                <font face=""Ubuntu", Arial, sans-serif"><span class="x_text-bold x_text-title"><b>Service</b></span> </font>
                                                                                                             </td>
                                                                                                         </tr>    
                                                                                                         <tr>
@@ -485,7 +485,7 @@ class EnviarCorreoService extends ConexionService{
                                                                                                         </tr>
                                                                                                         <tr>
                                                                                                             <td colspan="2" style="font-family:"Ubuntu",Arial,sans-serif; font-size:20px; line-height:22px; font-weight:700; color:#000000" colspan="2">
-                                                                                                                <font face=""Ubuntu", Arial, sans-serif"><span class="x_text-bold x_text-title">Destiny</span> </font>
+                                                                                                                <font face=""Ubuntu", Arial, sans-serif"><span class="x_text-bold x_text-title"><b>Destiny</b></span> </font>
                                                                                                             </td>
                                                                                                         </tr>    
                                                                                                         <tr>
@@ -502,7 +502,7 @@ class EnviarCorreoService extends ConexionService{
                                                                                                         </tr>
                                                                                                         <tr>
                                                                                                             <td colspan="2" style="font-family:"Ubuntu",Arial,sans-serif; font-size:20px; line-height:22px; font-weight:700; color:#000000" colspan="2">
-                                                                                                                <font face=""Ubuntu", Arial, sans-serif"><span class="x_text-bold x_text-title">Departure day & Pick up time</span> </font>
+                                                                                                                <font face=""Ubuntu", Arial, sans-serif"><span class="x_text-bold x_text-title"><b>Departure day & Pick up time</b></span> </font>
                                                                                                             </td>
                                                                                                         </tr>    
                                                                                                         <tr>
@@ -520,7 +520,7 @@ class EnviarCorreoService extends ConexionService{
                                                                                                         </tr>
                                                                                                         <tr>
                                                                                                             <td colspan="2" style="font-family:"Ubuntu",Arial,sans-serif; font-size:20px; line-height:22px; font-weight:700; color:#000000" colspan="2">
-                                                                                                                <font face=""Ubuntu", Arial, sans-serif"><span class="x_text-bold x_text-title">Contact Information</span> </font>
+                                                                                                                <font face=""Ubuntu", Arial, sans-serif"><span class="x_text-bold x_text-title"><b>Contact Information</b></span> </font>
                                                                                                             </td>
                                                                                                         </tr>
                                                                                                         '.$room_number.'                                                                                                        
@@ -556,7 +556,7 @@ class EnviarCorreoService extends ConexionService{
                                                                                                         </tr>
                                                                                                         <tr>
                                                                                                             <td colspan="2" style="font-family:"Ubuntu",Arial,sans-serif; font-size:20px; line-height:22px; font-weight:700; color:#000000" colspan="2">
-                                                                                                                <font face=""Ubuntu", Arial, sans-serif"><span class="x_text-bold x_text-title">Passengers & Pay</span> </font>
+                                                                                                                <font face=""Ubuntu", Arial, sans-serif"><span class="x_text-bold x_text-title"><b>Passengers & Pay</b></span> </font>
                                                                                                             </td>
                                                                                                         </tr>
                                                                                                         <tr>
@@ -637,6 +637,11 @@ class EnviarCorreoService extends ConexionService{
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="height:16px; line-height:16px" height="16" align="center">
+                                                                <br>This email was sent by an automated system. Please do not reply to this message.
                                                             </td>
                                                         </tr>
                                                     </tbody>
