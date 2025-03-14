@@ -25,7 +25,7 @@ class ConexionService
                 $this->_connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $this->_connexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
-                $result =  $this->_connexion->prepare("SET time_zone = '-05:00';");
+                $result =  $this->_connexion->prepare("SET time_zone = '-04:00';");
                 $result->execute();
 
                 $result =  $this->_connexion->prepare("SET NAMES utf8mb4 COLLATE utf8mb4_general_ci;");
