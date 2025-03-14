@@ -90,11 +90,11 @@ $api->get('/v1/general/destinyUnionActive/service/:service_id/date/:date', funct
     }  
 });
 
-$api->get('/v1/general/pickUpTimeActive/service/:service_id/date/:date', function ($service_id,$date) use ($api) {
+$api->get('/v1/general/pickUpTimeActive/origin/:origin_id/service/:service_id/date/:date', function ($origin_id,$service_id,$date) use ($api) {
 
     $generalService = new GeneralService();
 
-    $resp = $generalService->pickUpTimeActivosxServiceId($service_id,$date);
+    $resp = $generalService->pickUpTimeActivosxServiceId($origin_id,$service_id,$date);
 
     if ($resp["state"] == "ok") {
 
@@ -105,7 +105,7 @@ $api->get('/v1/general/pickUpTimeActive/service/:service_id/date/:date', functio
         $response["data"] = $datos;
 
         if($resp["query"]->rowCount() > 0) 
-            $response["message"] = "List of active pick up time x service_id: ". $service_id; 
+            $response["message"] = "List of active pick up time x orignin_id: ". $origin_id." service_id: ". $service_id; 
 
         echoResponse(200, $response);            
     }else{
@@ -117,11 +117,11 @@ $api->get('/v1/general/pickUpTimeActive/service/:service_id/date/:date', functio
     }  
 });
 
-$api->get('/v1/general/pickUpTimeActiveReturn/service/:service_id/date/:date', function ($service_id,$date) use ($api) {
+$api->get('/v1/general/pickUpTimeActiveReturn/origin/:origin_id/service/:service_id/date/:date', function ($origin_id,$service_id,$date) use ($api) {
 
     $generalService = new GeneralService();
 
-    $resp = $generalService->pickUpTimeActivosReturnxServiceId($service_id,$date);
+    $resp = $generalService->pickUpTimeActivosReturnxServiceId($origin_id,$service_id,$date);
 
     if ($resp["state"] == "ok") {
 
@@ -132,7 +132,7 @@ $api->get('/v1/general/pickUpTimeActiveReturn/service/:service_id/date/:date', f
         $response["data"] = $datos;
 
         if($resp["query"]->rowCount() > 0) 
-            $response["message"] = "List of active pick up time return x service_id: ". $service_id; 
+            $response["message"] = "List of active pick up time return x orignin_id: ". $origin_id." service_id: ". $service_id; 
 
         echoResponse(200, $response);            
     }else{

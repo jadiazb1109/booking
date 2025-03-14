@@ -1,5 +1,9 @@
 $(() => {
-  document.onmousemove = function(){ localStorage.setItem("currentRideBookingTime", 0); }
+  document.onmousemove = function(){     
+    if (localStorage.getItem("currentRideBookingTime") > 10) {
+      localStorage.setItem("currentRideBookingTime", 90);
+    }
+  }
 
   var cuerrentRide = {};
 
@@ -47,26 +51,38 @@ $(() => {
   setInterval(function() {
     var time_sesion = localStorage.getItem("currentRideBookingTime");   
 
-    if(time_sesion > 1){
+    if(time_sesion < 11){
 
       if(!aviso){
-        var confirm = DevExpress.ui.dialog.confirm("<i>Do you want to continue with the ride?</i>", "Keep");
+        var confirm = DevExpress.ui.dialog.confirm('<div class="text-center"><i>Due to inactivity. <br>You will be redirected back home in <br> <b id="divCounter" style="font-size: 35px;">10</b><br> seconds</div></i>', "Are you still there?");
         aviso = true;
+        const divCounter = document.getElementById('divCounter');
         confirm.done((dialogResult) => {
             if (dialogResult) {
-              localStorage.setItem("currentRideBookingTime", 0);
+              localStorage.setItem("currentRideBookingTime", 90);
               aviso = false;
             }else{
               localStorage.removeItem("currentRideBooking");
               location.href = "home";
             }
         });
-      }      
+
+      }else{
+
+        divCounter.textContent = time_sesion;
+
+        if (time_sesion == 0) {
+          localStorage.removeItem("currentRideBooking");
+          location.href = "home";
+        }
+      }
+
+      localStorage.setItem("currentRideBookingTime", (time_sesion * 1) - 1);      
 
     }else{
-      localStorage.setItem("currentRideBookingTime", (time_sesion * 1) + 1);
+      localStorage.setItem("currentRideBookingTime", (time_sesion * 1) - 1);
     }
-  }, 60000);
+  }, 1000);
 
   btnBackToHome.addEventListener('click', btnBackToHomeClick);
   function btnBackToHomeClick(e) {
@@ -559,7 +575,7 @@ $(() => {
                   btnRideNext.classList.add("collapse"); 
 
                   $.ajax({
-                    url: "api/v1/general/pickUpTimeActive/service/" + cuerrentRide.service.id + "/date/" + cuerrentRide.date,
+                    url: "api/v1/general/pickUpTimeActive/origin/" + cuerrentRide.origin.id + "/service/" + cuerrentRide.service.id + "/date/" + cuerrentRide.date,
                     type: "GET",
                     crossDomain: true,
                     dataType: 'json',
@@ -630,12 +646,7 @@ $(() => {
         if (txtPassengerQty.textContent == 0) {
           mtdMostrarMensaje("select the number of passengers", "error");
           return;
-        }
-        
-        if (txtPassengerQty.textContent > 14) {
-          mtdMostrarMensaje("Maximum number of passengers are 14.", "error");
-          return;
-        }
+        }       
 
         cuerrentRide.steps.push("mdPasajero");      
         cuerrentRide.passenger_qty = txtPassengerQty.textContent;
@@ -647,7 +658,7 @@ $(() => {
         btnRideNext.classList.add("collapse");
 
         $.ajax({
-          url: "api/v1/general/pickUpTimeActive/service/" + cuerrentRide.service.id + "/date/" + cuerrentRide.date,
+          url: "api/v1/general/pickUpTimeActive/origin/" + cuerrentRide.origin.id + "/service/" + cuerrentRide.service.id + "/date/" + cuerrentRide.date,
           type: "GET",
           crossDomain: true,
           dataType: 'json',
@@ -673,8 +684,14 @@ $(() => {
                 const template = $(Mustache.render($('#property-item-recogida').html(), pickUpTime));
             
                 template.find('.icon-box').on('dxclick', () => {
+
+                  if (pickUpTime.passenger_max && txtPassengerQty.textContent > pickUpTime.passenger_max) {
+                    mtdMostrarMensaje("Maximum number of passengers are " + pickUpTime.passenger_max, "error");
+                    return;
+                  }
+
                   cuerrentRide.steps.push("mdRecogida");
-                  cuerrentRide.pick_up_time = pickUpTime;
+                  cuerrentRide.pick_up_time = pickUpTime;                  
                  
                   if (cuerrentRide.service.type_id == 1) {
                     if(cuerrentRide.service.return == 1){
@@ -723,7 +740,7 @@ $(() => {
                     }
                   }                 
                   
-                  if (cuerrentRide.service.type_id == 2) {
+                  if (cuerrentRide.service.type_id == 2) {                    
 
                     if(cuerrentRide.service.room_number == 1){
                       cuerrentRide.current_step = "mdInformacionHabitacion";
@@ -845,7 +862,7 @@ $(() => {
         btnRideNext.classList.add("collapse");
         
         $.ajax({
-          url: "api/v1/general/pickUpTimeActiveReturn/service/" + cuerrentRide.service.id + "/date/" + departureSelect,
+          url: "api/v1/general/pickUpTimeActiveReturn/origin/" + cuerrentRide.origin.id + "/service/" + cuerrentRide.service.id + "/date/" + departureSelect,
           type: "GET",
           crossDomain: true,
           dataType: 'json',

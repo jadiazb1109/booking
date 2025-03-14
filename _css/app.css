@@ -5,17 +5,23 @@
 body,
 .card-body,
 .modal-body{
-    background-color: #4a4e38;
+    background-color: #05384D;
 }
 .modal-footer {
     justify-content: space-between;
-    background-color: #4a4e38;
+    background-color: #05384D;
 }
 
+.dx-toolbar,
+.dx-popup-content,
 .card-header,
 .modal-header{
   color: #ffc107;
-  background-color: #4a4e38;
+  background-color: #05384D;
+}
+
+.dx-icon, dx-icon-close{
+  background-color: #ffc107;
 }
 
 .class-p,

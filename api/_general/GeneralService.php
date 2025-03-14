@@ -179,7 +179,7 @@ class GeneralService extends ConexionService{
           
     }
 
-    function pickUpTimeActivosxServiceId($service_id,$date){
+    function pickUpTimeActivosxServiceId($origin_id,$service_id,$date){
 
         $pdo = $this->conectarBd();
 
@@ -195,20 +195,25 @@ class GeneralService extends ConexionService{
             $query = '
                 SELECT
                 sput.id,
+                sput.origin_id,
+                o.name origin,
                 sput.service_id,
                 s.name service,
                 sput.time,
                 TIME_FORMAT(sput.time , "%h:%i %p")time_format,
+                sput.passenger_max,
                 sput.active
                 FROM services_pick_up_time sput
+                JOIN origins o ON o.id = sput.origin_id
                 JOIN services s ON s.id = sput.service_id
-                WHERE sput.active = 1 AND sput.service_id = :service_id AND sput.return = 0
+                WHERE sput.active = 1 AND sput.origin_id = :origin_id AND sput.service_id = :service_id AND sput.return = 0
                     '.$whereDate.'
                 ORDER BY sput.time;
             ';
 
             $result = $pdo->prepare($query);
             $result->bindValue(":service_id", $service_id);
+            $result->bindValue(":origin_id", $origin_id);
             $result->execute(); 
             
             $this->response["state"]= "ok";
@@ -237,7 +242,7 @@ class GeneralService extends ConexionService{
           
     }
 
-    function pickUpTimeActivosReturnxServiceId($service_id,$date){
+    function pickUpTimeActivosReturnxServiceId($origin_id,$service_id,$date){
 
         $pdo = $this->conectarBd();
 
@@ -253,20 +258,25 @@ class GeneralService extends ConexionService{
             $query = '
                 SELECT
                 sput.id,
+                sput.origin_id,
+                o.name origin,
                 sput.service_id,
                 s.name service,
                 sput.time,
                 TIME_FORMAT(sput.time , "%h:%i %p")time_format,
+                sput.passenger_max,
                 sput.active
                 FROM services_pick_up_time sput
+                JOIN origins o ON o.id = sput.origin_id
                 JOIN services s ON s.id = sput.service_id
-                WHERE sput.active = 1 AND sput.service_id = :service_id AND sput.return = 1
+                WHERE sput.active = 1 AND sput.origin_id = :origin_id AND sput.service_id = :service_id AND sput.return = 1
                     '.$whereDate.'
                 ORDER BY sput.time;
             ';
 
             $result = $pdo->prepare($query);
             $result->bindValue(":service_id", $service_id);
+            $result->bindValue(":origin_id", $origin_id);
             $result->execute(); 
             
             $this->response["state"]= "ok";
@@ -301,142 +311,184 @@ class GeneralService extends ConexionService{
         
         try{
 
-            $lastInsertId = 0;
+            $limit_passenger = false;
+            $max_passenger = 0;
+ 
+            if ($currentRideBooking["pick_up_time"]["passenger_max"] != null) {
 
-            $pdo->beginTransaction();
-
-
-            $query = '
-                    INSERT INTO booking (uuid,date,type_id,date_departure,pick_up_time,origin_id,service_id,destiny_id,passenger,state) 
-                                VALUES (:uuid,now(),:type_id,:date_departure,:pick_up_time,:origin_id,:service_id,:destiny_id,:passenger,"SCHEDULER")
+                $query = '
+                    SELECT
+                    (IFNULL((SELECT passenger_max FROM services_pick_up_time sput 
+                                    WHERE sput.origin_id = '.$currentRideBooking["origin"]["id"].' 
+                                    AND sput.service_id = '.$currentRideBooking["service"]["id"].' 
+                                    AND time = "'.$currentRideBooking["pick_up_time"]["time"].'" ),0) -
+                    IFNULL(SUM(b.passenger),0))count_passe  
+                    FROM booking b
+                    WHERE b.date_departure = "'.$currentRideBooking["date"].'" 
+                                AND b.pick_up_time = "'.$currentRideBooking["pick_up_time"]["time"].'" 
+                                AND b.origin_id = '.$currentRideBooking["origin"]["id"].' 
+                                AND b.service_id = '.$currentRideBooking["service"]["id"].';
                 ';
 
-            $result = $pdo->prepare($query);
-            $result->bindValue(":uuid", $currentRideBooking["uuid"]);
-            $result->bindValue(":type_id", $currentRideBooking["service"]["type_id"]);
-            $result->bindValue(":date_departure", $currentRideBooking["date"]);
-            $result->bindValue(":pick_up_time", $currentRideBooking["pick_up_time"]["time"]);
-            $result->bindValue(":origin_id", $currentRideBooking["origin"]["id"]);
-            $result->bindValue(":service_id", $currentRideBooking["service"]["id"]);
-            $result->bindValue(":destiny_id", $currentRideBooking["destiny"]["destiny_id"]);
-            $result->bindValue(":passenger", $currentRideBooking["passenger_qty"]);
-            $result->execute();
+                $result = $pdo->prepare($query);
+                $result->execute(); 
 
-            $lastInsertId =  $pdo->lastInsertId();
 
-            if ($currentRideBooking["return"] != null) {
-                
+                $fila = $result->fetch();
 
-                if ($currentRideBooking["return"]["return"] == true) {
+                $max_passenger = $fila["count_passe"];
+
+                if(( $max_passenger - $currentRideBooking["passenger_qty"]) < 0){
+                    $limit_passenger = true;
+                }
+            }
+
+            if ($limit_passenger == false) {
+
+                $lastInsertId = 0;
+
+                $pdo->beginTransaction();
+
+
+                $query = '
+                        INSERT INTO booking (uuid,date,type_id,date_departure,pick_up_time,origin_id,service_id,destiny_id,passenger,state) 
+                                    VALUES (:uuid,now(),:type_id,:date_departure,:pick_up_time,:origin_id,:service_id,:destiny_id,:passenger,"SCHEDULER")
+                    ';
+
+                $result = $pdo->prepare($query);
+                $result->bindValue(":uuid", $currentRideBooking["uuid"]);
+                $result->bindValue(":type_id", $currentRideBooking["service"]["type_id"]);
+                $result->bindValue(":date_departure", $currentRideBooking["date"]);
+                $result->bindValue(":pick_up_time", $currentRideBooking["pick_up_time"]["time"]);
+                $result->bindValue(":origin_id", $currentRideBooking["origin"]["id"]);
+                $result->bindValue(":service_id", $currentRideBooking["service"]["id"]);
+                $result->bindValue(":destiny_id", $currentRideBooking["destiny"]["destiny_id"]);
+                $result->bindValue(":passenger", $currentRideBooking["passenger_qty"]);
+                $result->execute();
+
+                $lastInsertId =  $pdo->lastInsertId();
+
+                if ($currentRideBooking["return"] != null) {
+                    
+
+                    if ($currentRideBooking["return"]["return"] == true) {
+                        $query = '
+                            UPDATE booking SET 
+                                `return` = 1,
+                                return_date = :return_date,
+                                return_destiny = :return_destiny,
+                                return_pick_up_time = :return_pick_up_time
+                            WHERE id = :id; 
+                        ';
+
+                        $result = $pdo->prepare($query);
+                        $result->bindValue(":id", $lastInsertId);
+                        $result->bindValue(":return_date", $currentRideBooking["return"]["date"]);
+                        $result->bindValue(":return_destiny", $currentRideBooking["return"]["to"]);
+                        $result->bindValue(":return_pick_up_time", $currentRideBooking["return"]["pick_up_time"]["time"]);
+                        $result->execute();
+                    }
+
+                }
+
+                if ($currentRideBooking["destiny"] != null && $currentRideBooking["pay"] != null && $currentRideBooking["passenger_group"] == null) {
+                    
                     $query = '
                         UPDATE booking SET 
-                            `return` = 1,
-                            return_date = :return_date,
-                            return_destiny = :return_destiny,
-                            return_pick_up_time = :return_pick_up_time
+                                price = :price,
+                                additional = :additional,
+                                pay = :pay
                         WHERE id = :id; 
                     ';
 
                     $result = $pdo->prepare($query);
                     $result->bindValue(":id", $lastInsertId);
-                    $result->bindValue(":return_date", $currentRideBooking["return"]["date"]);
-                    $result->bindValue(":return_destiny", $currentRideBooking["return"]["to"]);
-                    $result->bindValue(":return_pick_up_time", $currentRideBooking["return"]["pick_up_time"]["time"]);
+                    $result->bindValue(":price", $currentRideBooking["destiny"]["price"]);
+                    $result->bindValue(":additional", $currentRideBooking["destiny"]["additional"]);
+                    $result->bindValue(":pay", $currentRideBooking["pay"]);
                     $result->execute();
+
                 }
 
-            }
+                if ($currentRideBooking["passenger_group"] != null) {
+                    
+                    $query = '
+                        UPDATE booking SET 
+                                passenger_min = :passenger_min,
+                                passenger_max = :passenger_max,
+                                `group` = 1,
+                                price = :price,
+                                additional = :additional,
+                                pay = :pay
+                        WHERE id = :id; 
+                    ';
 
-            if ($currentRideBooking["destiny"] != null && $currentRideBooking["pay"] != null && $currentRideBooking["passenger_group"] == null) {
-                
-                $query = '
-                    UPDATE booking SET 
+                    $result = $pdo->prepare($query);
+                    $result->bindValue(":id", $lastInsertId);
+                    $result->bindValue(":passenger_min", $currentRideBooking["passenger_group"]["passenger_min"]);
+                    $result->bindValue(":passenger_max", $currentRideBooking["passenger_group"]["passenger_max"]);
+                    $result->bindValue(":price", $currentRideBooking["passenger_group"]["price"]);
+                    $result->bindValue(":additional", $currentRideBooking["passenger_group"]["additional"]);
+                    $result->bindValue(":pay", $currentRideBooking["pay"]);
+                    $result->execute();
+
+                }
+
+                if ($currentRideBooking["service"]["room_number"] == 1) {
+                    
+                    $query = '
+                        UPDATE booking SET 
+                            room_number = :room_number,
                             price = :price,
                             additional = :additional,
                             pay = :pay
-                    WHERE id = :id; 
-                ';
+                        WHERE id = :id; 
+                    ';
 
-                $result = $pdo->prepare($query);
-                $result->bindValue(":id", $lastInsertId);
-                $result->bindValue(":price", $currentRideBooking["destiny"]["price"]);
-                $result->bindValue(":additional", $currentRideBooking["destiny"]["additional"]);
-                $result->bindValue(":pay", $currentRideBooking["pay"]);
-                $result->execute();
+                    $result = $pdo->prepare($query);
+                    $result->bindValue(":id", $lastInsertId);
+                    $result->bindValue(":room_number", $currentRideBooking["room_number"]);
+                    $result->bindValue(":price", $currentRideBooking["destiny"]["price"]);
+                    $result->bindValue(":additional", $currentRideBooking["destiny"]["additional"]);
+                    $result->bindValue(":pay", $currentRideBooking["pay"]);
+                    $result->execute();
 
-            }
+                }
 
-            if ($currentRideBooking["passenger_group"] != null) {
-                
-                $query = '
-                    UPDATE booking SET 
-                            passenger_min = :passenger_min,
-                            passenger_max = :passenger_max,
-                            `group` = 1,
-                            price = :price,
-                            additional = :additional,
-                            pay = :pay
-                    WHERE id = :id; 
-                ';
+                if ($currentRideBooking["client"] != null) {
+                    
+                    $query = '
+                        UPDATE booking SET 
+                            client_name = :client_name,
+                            client_email = :client_email,
+                            client_phone_number = :client_phone_number,
+                            client_destiny = :client_destiny
+                        WHERE id = :id; 
+                    ';
 
-                $result = $pdo->prepare($query);
-                $result->bindValue(":id", $lastInsertId);
-                $result->bindValue(":passenger_min", $currentRideBooking["passenger_group"]["passenger_min"]);
-                $result->bindValue(":passenger_max", $currentRideBooking["passenger_group"]["passenger_max"]);
-                $result->bindValue(":price", $currentRideBooking["passenger_group"]["price"]);
-                $result->bindValue(":additional", $currentRideBooking["passenger_group"]["additional"]);
-                $result->bindValue(":pay", $currentRideBooking["pay"]);
-                $result->execute();
+                    $result = $pdo->prepare($query);
+                    $result->bindValue(":id", $lastInsertId);
+                    $result->bindValue(":client_name", $currentRideBooking["client"]["name"]);
+                    $result->bindValue(":client_email", $currentRideBooking["client"]["email"]);
+                    $result->bindValue(":client_phone_number", $currentRideBooking["client"]["phone"]);
+                    $result->bindValue(":client_destiny", $currentRideBooking["client"]["destiny"]);
+                    $result->execute();
 
-            }
+                }
 
-            if ($currentRideBooking["service"]["room_number"] == 1) {
-                
-                $query = '
-                    UPDATE booking SET 
-                        room_number = :room_number,
-                        price = :price,
-                        additional = :additional,
-                        pay = :pay
-                    WHERE id = :id; 
-                ';
+                $pdo->commit();
 
-                $result = $pdo->prepare($query);
-                $result->bindValue(":id", $lastInsertId);
-                $result->bindValue(":room_number", $currentRideBooking["room_number"]);
-                $result->bindValue(":price", $currentRideBooking["destiny"]["price"]);
-                $result->bindValue(":additional", $currentRideBooking["destiny"]["additional"]);
-                $result->bindValue(":pay", $currentRideBooking["pay"]);
-                $result->execute();
+                $this->response["state"]= "ok";
+                $this->response["message"]= "Resultado de la función saveBookingRide()";
+                $this->response["query"]= $lastInsertId;
 
-            }
+            }else{
 
-            if ($currentRideBooking["client"] != null) {
-                
-                $query = '
-                    UPDATE booking SET 
-                        client_name = :client_name,
-                        client_email = :client_email,
-                        client_phone_number = :client_phone_number,
-                        client_destiny = :client_destiny
-                    WHERE id = :id; 
-                ';
+                $this->response["state"]= "ko";
+                $this->response["message"]= "For the selected pickup the maximum number of passengers are: " .$max_passenger;
+                $this->response["query"]= [];   
 
-                $result = $pdo->prepare($query);
-                $result->bindValue(":id", $lastInsertId);
-                $result->bindValue(":client_name", $currentRideBooking["client"]["name"]);
-                $result->bindValue(":client_email", $currentRideBooking["client"]["email"]);
-                $result->bindValue(":client_phone_number", $currentRideBooking["client"]["phone"]);
-                $result->bindValue(":client_destiny", $currentRideBooking["client"]["destiny"]);
-                $result->execute();
-
-            }
-
-            $pdo->commit();
-
-            $this->response["state"]= "ok";
-            $this->response["message"]= "Resultado de la función saveBookingRide()";
-            $this->response["query"]= $lastInsertId;     
+            } 
 
         }catch(PDOException $e){
 

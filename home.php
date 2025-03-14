@@ -67,7 +67,7 @@
             pay: null,
             state: null
         }));
-        localStorage.setItem("currentRideBookingTime", 0);
+        localStorage.setItem("currentRideBookingTime", 90);
         location.href = "app";
     }
 
