@@ -21,14 +21,19 @@
         <script src="_js/app-list-booking.js"></script>
         <style>
             html{
-                height: 100%;                
+                height: 100%;
             }
             body {                
                 
                 font-family: Arial, sans-serif;
                 text-align: center;                
                 color: black;
+                height: 100%;
+                background-image: url('_img/bg_body_4_1.png');
+                background-position: center;
+                background-repeat: no-repeat;
                 background-color: #05384D;
+                background-size: contain;
             }
             .container {
                 margin: 10px auto;
@@ -36,11 +41,14 @@
                 padding: 5px;
                 border-radius: 10px;                
             }
+            h1{
+                color: black;
+            }
         </style>
     </head>
     <body>
         <div class="container">
-            <h1 style="color:#FFFFFF"><b>BOOKING</b></h1>
+            <h1><b>BOOKING</b></h1>
             <div>
                 <div class="form-group row">
                     <div class="col-lg-2"></div>
@@ -54,15 +62,15 @@
                     </div>
                     <div class="col-lg-1">
                         <br>
-                        <button id="btnGenerar"  class="btn btn-outline-light" >Search</button>                                                
+                        <button id="btnGenerar"  class="btn btn-outline-warning" >Search</button>                                                
                     </div>
                     <div class="col-lg-1">
                         <br>
-                        <button id="btnExportar"  class="btn btn-outline-light" >Export</button>                                                
+                        <button id="btnExportar"  class="btn btn-outline-warning" >Export</button>                                                
                     </div>
                     <div class="col-lg-2">
                         <br>
-                        <a id="btnAirportShuttleList" class="btn btn-outline-light" href="app-list-airport" target="_blank">Airport Shuttle List</a>                                         
+                        <a id="btnAirportShuttleList" class="btn btn-outline-warning" href="app-list-airport" target="_blank">Airport Shuttle List</a>                                         
                     </div>
                 </div>
                 <br>

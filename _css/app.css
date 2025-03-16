@@ -5,11 +5,11 @@
 body,
 .card-body,
 .modal-body{
-    background-color: #4a4e38;
+    background-color: #013759;
 }
 .modal-footer {
     justify-content: space-between;
-    background-color: #4a4e38;
+    background-color: #013759;
 }
 
 .dx-toolbar,
@@ -17,7 +17,7 @@ body,
 .card-header,
 .modal-header{
   color: #ffc107;
-  background-color: #4a4e38;
+  background-color: #013759;
 }
 
 .dx-icon, dx-icon-close{

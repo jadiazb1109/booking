@@ -39,8 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function mtdMostrarMensaje(mensaje, tipo = "success", time = 3000) {
 
-        let direction = "down-push";
-        let position = "top right";
+        let direction = "up-push";
+        let position = "bottom right";
     
         DevExpress.ui.notify({
             message: mensaje,

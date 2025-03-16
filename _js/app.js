@@ -1269,7 +1269,7 @@ $(() => {
   function mtdMostrarMensaje(mensaje, tipo = "success", time = 3000) {
 
     let direction = "up-push";
-    let position = "booton center";
+    let position = "bottom center";
 
     DevExpress.ui.notify({
         message: mensaje,

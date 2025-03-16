@@ -17,7 +17,7 @@
         <style>
             html{
                 height: 100%;
-                background-image: url('_img/bg_body_4.png');
+                background-image: url('_img/bg_body_4_1.png');
                 background-position: center;
                 background-repeat: no-repeat;
                 background-color: #05384D;
@@ -49,6 +49,9 @@
             }
             th {
                 background-color: rgba(51, 51, 51, 0.7);
+            }
+            h1{
+                color: black;
             }
         </style>
     </head>
