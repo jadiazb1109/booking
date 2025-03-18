@@ -20,7 +20,7 @@
                 background-image: url('_img/bg_body_4_1.png');
                 background-position: center;
                 background-repeat: no-repeat;
-                background-color: #05384D;
+                background-color: #023759;
                 background-size: contain;
             }
             body {                
