@@ -113,6 +113,36 @@ class EnviarCorreoService extends ConexionService{
                 $client_destiny = $currentRideBooking["client"]["destiny"] ? " ( ".$currentRideBooking["client"]["destiny"]." )" : "";
             }
 
+            $promo_str = "";
+
+            if ($currentRideBooking["destiny"]["promo_one_x_two"] == 1) {
+                $promo_str .= '
+                    <tr>
+                        <td style="height:10px; line-height:10px" height="10">&nbsp;</td>
+                    </tr>                                                                                    
+                    <tr>
+                        <td class="x_list-icon" ><img alt="" src="https://www.rentalcars.com/images/site_graphics/newsite/outlined-tick-circle-green.png"></td>
+                        <td style="font-family:"Open sans",Arial,sans-serif; font-size:18px; line-height:20px; color:#000000">
+                            <font face=""Open sans", Arial, sans-serif"><span>&nbsp;&nbsp;Promo: 2 x 1</span> </font>
+                        </td>
+                    </tr>
+                ';
+            }
+
+            if ($currentRideBooking["destiny"]["promo_next_pass"] > 0 && $currentRideBooking["passenger_qty"] > $currentRideBooking["destiny"]["promo_next_pass"]) {
+                $promo_str .= '
+                    <tr>
+                        <td style="height:10px; line-height:10px" height="10">&nbsp;</td>
+                    </tr>                                                                                    
+                    <tr>
+                        <td class="x_list-icon" ><img alt="" src="https://www.rentalcars.com/images/site_graphics/newsite/outlined-tick-circle-green.png"></td>
+                        <td style="font-family:"Open sans",Arial,sans-serif; font-size:18px; line-height:20px; color:#000000">
+                            <font face=""Open sans", Arial, sans-serif"><span>&nbsp;&nbsp;Promo: Greater than '. $currentRideBooking["destiny"]["promo_next_pass"] .' passengers x '. $this->asDollars((double)$currentRideBooking["destiny"]["promo_next_pass_preci"]) .'</span> </font>
+                        </td>
+                    </tr>
+                ';
+            }          
+
             $passenger = 0;
             $price = 0;
             $additional = 0;
@@ -571,6 +601,7 @@ class EnviarCorreoService extends ConexionService{
                                                                                                                 <font face=""Open sans", Arial, sans-serif"><span>&nbsp;&nbsp;Passenger: '.$passenger.'</span> </font>
                                                                                                             </td>
                                                                                                         </tr>
+                                                                                                        '.$promo_str.'
                                                                                                         <tr>
                                                                                                             <td style="height:10px; line-height:10px" height="10">&nbsp;</td>
                                                                                                         </tr>                                                                                    
