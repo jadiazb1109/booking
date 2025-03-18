@@ -830,17 +830,27 @@ $(() => {
 
         let currentPay = 0;
 
+        currentPay = (((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) *
+        (cuerrentRide.passenger_qty * cantMult));
+
         if(cuerrentRide.passenger_group){    
           
           currentPay = (((cuerrentRide.passenger_group.price * 1) + (cuerrentRide.passenger_group.additional * 1)) *
           (cuerrentRide.passenger_qty * cantMult));
 
-        }else{
+        }
+        
+        if(cuerrentRide.destiny.promo_one_x_two == 1){  
 
-          currentPay = (((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) *
-          (cuerrentRide.passenger_qty * cantMult));
-          
-        }  
+          currentPay = (((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) * 1);
+
+        }
+
+        if(cuerrentRide.destiny.promo_next_pass > 0 && cuerrentRide.passenger_qty > cuerrentRide.destiny.promo_next_pass){  
+
+          currentPay =  currentPay + ((cuerrentRide.destiny.promo_next_pass_preci * 1) * (cuerrentRide.passenger_qty - cuerrentRide.destiny.promo_next_pass));
+
+        }
 
         btnPay.textContent = "PAY " +  fnFormatoMoneda(currentPay) + " USD";
 
@@ -1211,23 +1221,45 @@ $(() => {
             body +=  fnFormatoMoneda(cuerrentRide.passenger_group.price) +' + ('+fnFormatoMoneda(cuerrentRide.passenger_group.additional)+')';
           }else{
             body +=  fnFormatoMoneda(cuerrentRide.destiny.price) +' + ('+fnFormatoMoneda(cuerrentRide.destiny.additional)+')';
-          }     
-
+          }  
+                   
           let cantMult = 1;
 
           if(cuerrentRide.return && cuerrentRide.return.return){
             cantMult = 2;
           }
 
+          let currentPay = 0;
+
+          currentPay = (((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) *
+          (cuerrentRide.passenger_qty * cantMult));
+
+          if(cuerrentRide.passenger_group){    
+            
+            currentPay = (((cuerrentRide.passenger_group.price * 1) + (cuerrentRide.passenger_group.additional * 1)) *
+            (cuerrentRide.passenger_qty * cantMult));
+
+          }
+          
+          if(cuerrentRide.destiny.promo_one_x_two == 1){  
+
+            currentPay = (((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) * 1);
+            body += '<div class="caption">Promo</div>';
+            body += "2 x 1 <br>";
+
+          }
+
+          if(cuerrentRide.destiny.promo_next_pass > 0 && cuerrentRide.passenger_qty > cuerrentRide.destiny.promo_next_pass){  
+
+            currentPay =  currentPay + ((cuerrentRide.destiny.promo_next_pass_preci * 1) * (cuerrentRide.passenger_qty - cuerrentRide.destiny.promo_next_pass));
+            body += '<div class="caption">Promo</div>';
+            body += "Greater than " + cuerrentRide.destiny.promo_next_pass + "  passengers x " + fnFormatoMoneda(cuerrentRide.destiny.promo_next_pass_preci) + " USD ";
+
+          }
+
           body += '<div class="caption">Pay</div>';
           body += "<b>";
-          if(cuerrentRide.passenger_group){           
-            body += fnFormatoMoneda(((cuerrentRide.passenger_group.price * 1) + (cuerrentRide.passenger_group.additional * 1)) *
-             (cuerrentRide.passenger_qty * cantMult)) + " USD</b>";
-          }else{
-            body += fnFormatoMoneda(((cuerrentRide.destiny.price * 1) + (cuerrentRide.destiny.additional * 1)) *
-             (cuerrentRide.passenger_qty * cantMult)) + " USD</b>";
-          }          
+          body += fnFormatoMoneda(currentPay) + " USD</b>";         
         }
 
         if(cuerrentRide.client){

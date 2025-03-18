@@ -24,16 +24,7 @@
                 height: 100%;
             }
             body {                
-                
-                font-family: Arial, sans-serif;
-                text-align: center;                
-                color: black;
-                height: 100%;
-                background-image: url('_img/bg_body_4_1.png');
-                background-position: center;
-                background-repeat: no-repeat;
-                background-color: #05384D;
-                background-size: contain;
+                text-align: center;
             }
             .container {
                 margin: 10px auto;
@@ -43,6 +34,27 @@
             }
             h1{
                 color: black;
+            }
+            .btn-outline-warning{
+                --bs-btn-color: #b9a46a;
+                --bs-btn-border-color: #b9a46a;
+                --bs-btn-hover-color: #000;
+                --bs-btn-hover-bg: #b9a46a;
+                --bs-btn-hover-border-color: #b9a46a;
+                --bs-btn-focus-shadow-rgb: 255, 193, 7;
+                --bs-btn-active-color: #000;
+                --bs-btn-active-bg: #b9a46a;
+                --bs-btn-active-border-color: #b9a46a;
+                --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+                --bs-btn-disabled-color: #b9a46a;
+                --bs-btn-disabled-bg: transparent;
+                --bs-btn-disabled-border-color: #b9a46a;
+                --bs-gradient: none;
+            }
+
+            .btn-outline-warning:hover {
+                background-color: #b9a46a;
+                border-color: #b9a46a;
             }
         </style>
     </head>
