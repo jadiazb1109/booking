@@ -5,11 +5,11 @@
 body,
 .card-body,
 .modal-body{
-    background-color: #013759;
+    background-color: #023759;
 }
 .modal-footer {
     justify-content: space-between;
-    background-color: #013759;
+    background-color: #023759;
 }
 
 .btn-outline-warning{
@@ -39,7 +39,7 @@ body,
 .card-header,
 .modal-header{
   color: #b9a46a;
-  background-color: #013759;
+  background-color: #023759;
 }
 
 .dx-icon, dx-icon-close{
