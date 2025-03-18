@@ -167,7 +167,7 @@ $(() => {
       `);
       }
 
-      if(cuerrentRide.current_step == "mdDestino"){
+      if(cuerrentRide.current_step == "mdDestino" && cuerrentRide.current_step == "mdDestinoGrupo"){
         btnRideNext.classList.add("collapse");    
       }
 
@@ -301,7 +301,7 @@ $(() => {
                         btnRideBack.classList.remove("collapse");
                         mdServicio.classList.add("collapse");
                         mdDestinoGrupo.classList.remove("collapse");
-                        btnRideNext.classList.remove("collapse");
+                        btnRideNext.classList.add("collapse");
 
                         $.ajax({
                           url: "api/v1/general/destinyUnionActive/service/" + cuerrentRide.service.id + "/date/null",
