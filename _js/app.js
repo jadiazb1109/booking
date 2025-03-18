@@ -125,6 +125,17 @@ $(() => {
 
       if(cuerrentRide.current_step == "mdServicio"){
         btnRideNext.classList.add("collapse");    
+        if(elementByIdStepCurrent == "mdDestinoGrupo"){
+          $('.listDestinoGrupo').html(`                    
+            <script id="property-item-destino-grupo" type="text/html">
+                <div class="icon-box">
+                    <div class="icon-box btn btn-outline-warning" style="align-content: center;width: 100%;">
+                        <b>{{ destiny }}</b>
+                    </div>
+                </div>
+            </script>
+          `);
+        }
       }
 
       if(cuerrentRide.current_step == "mdCalendario" && (cuerrentRide.service.type_id == 1 || cuerrentRide.service.type_id == 2 || cuerrentRide.service.type_id == 3)){
