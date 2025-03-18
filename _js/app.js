@@ -167,7 +167,7 @@ $(() => {
       `);
       }
 
-      if(cuerrentRide.current_step == "mdDestino" && cuerrentRide.current_step == "mdDestinoGrupo"){
+      if(cuerrentRide.current_step == "mdDestino" || cuerrentRide.current_step == "mdDestinoGrupo"){
         btnRideNext.classList.add("collapse");    
       }
 
