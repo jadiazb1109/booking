@@ -465,7 +465,8 @@ class GeneralService extends ConexionService{
                             client_name = :client_name,
                             client_email = :client_email,
                             client_phone_number = :client_phone_number,
-                            client_destiny = :client_destiny
+                            client_destiny = :client_destiny,
+                            client_pay = :client_pay
                         WHERE id = :id; 
                     ';
 
@@ -475,6 +476,7 @@ class GeneralService extends ConexionService{
                     $result->bindValue(":client_email", $currentRideBooking["client"]["email"]);
                     $result->bindValue(":client_phone_number", $currentRideBooking["client"]["phone"]);
                     $result->bindValue(":client_destiny", $currentRideBooking["client"]["destiny"]);
+                    $result->bindValue(":client_pay",json_encode( $currentRideBooking["client"]["pay"], 512));
                     $result->execute();
 
                 }

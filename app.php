@@ -1,3 +1,17 @@
+<?php
+    require 'square/vendor/autoload.php';
+    include 'square/utils/location-info.php';
+
+    use Square\Environment;
+    use Ramsey\Uuid\Uuid;
+    // dotenv is used to read from the '.env' file created for credentials
+    $dotenv = Dotenv\Dotenv::create(__DIR__);
+    $dotenv->load();
+
+    // Pulled from the .env file and upper cased e.g. SANDBOX, PRODUCTION.
+    $upper_case_environment = strtoupper(getenv('ENVIRONMENT'));
+    $web_payment_sdk_url = $_ENV["ENVIRONMENT"] === Environment::PRODUCTION ? "https://web.squarecdn.com/v1/square.js" : "https://sandbox.web.squarecdn.com/v1/square.js";
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -21,7 +35,31 @@
         <script src="_js/app.js"></script>
         <script src="_js/data.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/node-uuid/1.4.7/uuid.min.js"></script>
+        <!-- link to the Square web payment SDK library -->
+        <script type="text/javascript" src="<?php echo $web_payment_sdk_url ?>"></script>
+        <script type="text/javascript">
+            window.applicationId =
+            "<?php
+                echo getenv('SQUARE_APPLICATION_ID');
+                ?>";
+            window.locationId =
+            "<?php
+                echo getenv('SQUARE_LOCATION_ID');
+                ?>";
+            window.currency =
+            "<?php
+                echo $location_info->getCurrency();
+                ?>";
+            window.country =
+            "<?php
+                echo $location_info->getCountry();
+                ?>";
+            window.idempotencyKey =
+            "<?php
+                echo Uuid::uuid4();
+                ?>";
+        </script>
     </head>
     <body>
         <div class="container">
@@ -32,6 +70,7 @@
                             <h2 class="modal-title col-12 text-center">Let’s book your ride</h2>
                         </div>
                         <div id="popup-with-scrollview"></div>
+                        <div id="popup-pay-with-scrollview"></div>
                         <div class="modal-body">
                             <div class="collapse" id="mdOrigen">
                                 <div class="card">      
@@ -386,12 +425,7 @@
                                     <div class="card-body">
                                         <div class="card-text" id="cdInformacionTarjeta">
                                             <div class="icon-grid row row-cols-xl-8 listInformacionTarjeta" style="padding-left: 50px;padding-right: 50px;">
-                                                <div class="row">
-                                                    <div class="form-group">
-                                                        <label class="form-label" for="txtCardNumber"><strong>Card Number</strong></label>
-                                                        <input type="text" class="form-control" id="txtCardNumber" placeholder="Enter your card number">
-                                                    </div>                                         
-                                                </div>
+                                                
                                                 <div class="row">
                                                     <div class="form-group text-center row row-cols-xl-8" style="padding-left: 50px;padding-right: 40px;">
                                                         <button id="btnPay" type="button" class="btn btn-success">PAY </button>

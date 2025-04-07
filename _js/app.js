@@ -822,7 +822,8 @@ $(() => {
           destiny: txtNameDestiny.value ? txtNameDestiny.value.toUpperCase() : null,
           name: txtName.value.toUpperCase(),
           phone: txtPhone.value,
-          email: txtEmail.value
+          email: txtEmail.value,
+          pay: null
         }
         cuerrentRide.current_step = "mdInformacionTarjeta";
         setDataCurrentRideBooking(cuerrentRide);
@@ -1064,7 +1065,8 @@ $(() => {
                 destiny: null,
                 name: txtNameA.value.toUpperCase(),
                 phone: txtPhoneA.value,
-                email: txtEmailA.value
+                email: txtEmailA.value,
+                pay: null
               }
               setDataCurrentRideBooking(cuerrentRide);
 
@@ -1099,7 +1101,13 @@ $(() => {
       }
   }
 
-  const txtCardNumber = document.getElementById("txtCardNumber");
+  const popupPayWithScrollView = $('#popup-pay-with-scrollview').dxPopup({
+    visible: false,
+    title: 'PAY CARD',
+    hideOnOutsideClick: false,
+    showCloseButton: true
+  }).dxPopup('instance');
+
   const btnPay = document.getElementById("btnPay");
 
   btnPay.addEventListener('click', btnPayClick);
@@ -1108,48 +1116,17 @@ $(() => {
 
       if(cuerrentRide.current_step == "mdInformacionTarjeta"){
 
-        if(!txtCardNumber.value){
-          mtdMostrarMensaje("Enter your card number", "error");
-          return;
-        }
+        getDataCurrentRideBooking();
+        mdtActualizarTemplatePay(popupPayWithScrollView);
+        popupPayWithScrollView.show();
 
-        var confirm = DevExpress.ui.dialog.confirm("<i>Do you want to continue with the booking?</i>", "Booking");
+        /* var confirm = DevExpress.ui.dialog.confirm("<i>Do you want to continue with the booking?</i>", "Booking");
         confirm.done((dialogResult) => {
             if (dialogResult) {            
 
-              cuerrentRide.room_number = txtRoomNumber.value;
-              setDataCurrentRideBooking(cuerrentRide);
-
-              let buttonText = btnPay.textContent;
-
-              mtdActivarLoad(btnPay, "schedule...");
-
-              $.ajax({
-                url: "api/v1/general/booking/ride",
-                type: "POST",
-                dataType: 'json',
-                crossDomain: true,
-                data: JSON.stringify({
-                  currentRideBooking: cuerrentRide
-                }),
-                error: function() {
-                  mtdDesactivarLoad(btnPay, buttonText);
-                  mtdMostrarMensaje("Could not complete request to server", "warning");
-                },
-              }).done((respuesta) => {                 
-
-                  if (respuesta["state"] === 'ok') {
-                      cuerrentRide.state = "SCHEDULER";
-                      setDataCurrentRideBooking(cuerrentRide);
-                      setTimeout(() => { location.href = "home"; }, 1000);                      
-                  }
-                  if (respuesta["state"] === 'ko') {
-                      mtdDesactivarLoad(btnPay, buttonText);
-                      mtdMostrarMensaje(respuesta["message"], "error");
-                  }
-              });
+              
             }
-        });
+        }); */
       }
   }
 
@@ -1286,6 +1263,49 @@ $(() => {
           height: '100%',
         });
 
+        return $scrollView;
+      }
+    });
+  }
+
+  function mdtActualizarTemplatePay(component) {
+    component.option({contentTemplate() 
+      {
+        const $scrollView = $('<div/>');
+  
+        let body = `      
+          
+            <html>
+  
+            <head>            
+              <link rel="stylesheet" type="text/css" href="square/public/stylesheets/style.css">
+              <link rel="stylesheet" type="text/css" href="square/public/stylesheets/sq-payment.css">
+            </head>
+  
+            <body>
+              <form class="payment-form" id="fast-checkout">
+                <div class="wrapper">
+                  <div id="card-container"></div>
+                  <button id="card-button" type="button">`+"PAY " +  fnFormatoMoneda(cuerrentRide.pay) + " USD"+`</button>
+                  <span id="payment-flow-message"></span> 
+                </div>
+              </form>
+              <script type="text/javascript" src="square/public/js/sq-card-pay.js"></script>
+              <script type="text/javascript" src="square/public/js/sq-payment-flow.js"></script>
+            </body>
+  
+            </html>
+        
+        `;
+    
+  
+        $scrollView.append($('<div/>').html(body));
+  
+        $scrollView.dxScrollView({
+          width: '100%',
+          height: '100%',
+        });
+  
         return $scrollView;
       }
     });
