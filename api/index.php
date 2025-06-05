@@ -20,7 +20,16 @@ $api = new \Slim\Slim();
 
 //agregamos los archivos de negocios para su llamado
 include_once '_general/GeneralController.php';
-
+include_once '_user/UserController.php';
+include_once '_people/PeopleController.php'; 
+include_once '_rol/RolController.php';
+include_once '_type_idetification/TypeIdetificationController.php';
+include_once '_origin/OriginController.php';
+include_once '_service/ServiceController.php';
+include_once '_origin_service_union/UnionOriginServiceController.php';
+include_once '_destiny/DestinyController.php';
+include_once '_service_destiny_union/UnionServiceDestinyController.php';
+include_once '_service_destiny_union_group/UnionServiceDestinyGroupController.php';
 
 //iniciamos la aplicacion
 $api->run();
@@ -47,12 +56,12 @@ function verifyRequiredParams($required_fields)
     foreach ($required_fields as $field) {
         if (!array_key_exists($field, $request_params)) {
             $error = true;
-            $error_fields .= $field . ': <falta>, ';
+            $error_fields .= $field . ': <required>, ';
         } else {
             if (!is_bool($request_params[$field])) {
                 if (strlen(trim($request_params[$field])) <= 0) {
                     $error = true;
-                    $error_fields .= $field . ': <está vacío>, ';
+                    $error_fields .= $field . ': <is empty>, ';
                 }
             }
         }
@@ -61,9 +70,9 @@ function verifyRequiredParams($required_fields)
     if ($error) {
         $response = array();
         $api = \Slim\Slim::getInstance();
-        $response["estado"] = "ko";
-        $response["mensaje"] = 'Los campos obligatorios: ' . substr($error_fields, 0, -2);
-        $response["datos"] = $data;
+        $response["state"] = "ko";
+        $response["message"] = 'Required fields: ' . substr($error_fields, 0, -2);
+        $response["data"] = $data;
         echoResponse(400, $response);
 
         $api->stop();
@@ -86,12 +95,12 @@ function verifyRequiredParamsPost($required_fields)
     foreach ($required_fields as $field) {
         if (!array_key_exists($field, $request_params)) {
             $error = true;
-            $error_fields .= $field . ': <falta>, ';
+            $error_fields .= $field . ': <required>, ';
         } else {
             if (!is_bool($request_params[$field])) {
                 if (strlen(trim($request_params[$field])) <= 0 || is_null($request_params[$field]) || strtoupper($request_params[$field]) == 'NULL') {
                     $error = true;
-                    $error_fields .= $field . ': <está vacío>, ';
+                    $error_fields .= $field . ': <is empty>, ';
                 }
             }
         }
@@ -100,9 +109,9 @@ function verifyRequiredParamsPost($required_fields)
     if ($error) {
         $response = array();
         $api = \Slim\Slim::getInstance();
-        $response["estado"] = "ko";
-        $response["mensaje"] = 'Los campos obligatorios: ' . substr($error_fields, 0, -2);
-        $response["datos"] = $data;
+        $response["state"] = "ko";
+        $response["message"] = 'Required fields: ' . substr($error_fields, 0, -2);
+        $response["data"] = $data;
         echoResponse(400, $response);
 
         $api->stop();
@@ -157,24 +166,24 @@ function authenticate(\Slim\Route $route)
 
         $userService = new UserService();
 
-        $validarToken = $userService->usuariosValidarToken($token);
+        $validarToken = $userService->userValidateToken($token);
 
         // validating api key
         if (!$validarToken["query"]->rowCount()) {
 
             // api key is not present in users table
-            $response["estado"] = $validarToken["estado"];
-            $response["mensaje"] = "Acceso denegado. Token incorrecto";
-            $response["datos"] = [];
+            $response["state"] = "ko";
+            $response["message"] = "Access denied. Incorrect token.";
+            $response["data"] = [];
             echoResponse(401, $response);
 
             $api->stop(); //Detenemos la ejecución del programa al no validar            
         }
     } else {
         // api key is missing in header
-        $response["estado"] = "ko";
-        $response["mensaje"] = "Falta token de autorización. Headers <Api-Key: some_key>";
-        $response["datos"] = [];
+        $response["state"] = "ko";
+        $response["message"] = "Missing authorization token. Headers <Api-Key: some_key>";
+        $response["data"] = [];
         echoResponse(400, $response);
 
         $api->stop();

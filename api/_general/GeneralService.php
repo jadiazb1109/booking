@@ -47,9 +47,9 @@ class GeneralService extends ConexionService{
 
             $logModel->_set("id",$this->guardarLogErrores($logModel));
 
-           $this->response["state"]= "ko";
-           $this->response["message"]= "Error al ejecutar la sentencia. Codigo: ".$logModel->_get("id");
-           $this->response["query"]= [];
+            $this->response["state"]= "ko";
+            $this->response["message"]= "Error executing query. Code: ".$logModel->_get("id");
+            $this->response["query"]= [];
         } 
 
         $pdo = $this->desconectarBd();
@@ -78,7 +78,7 @@ class GeneralService extends ConexionService{
                 FROM services s
                 JOIN type t ON t.id = s.type_id
                 JOIN origins_services_union u ON u.service_id = s.id
-                WHERE s.active = 1 AND u.origin_id = :origin_id
+                WHERE s.active = 1 AND u.active = 1 AND u.origin_id = :origin_id
                 ORDER BY s.name;
             ';
 
@@ -101,9 +101,9 @@ class GeneralService extends ConexionService{
 
             $logModel->_set("id",$this->guardarLogErrores($logModel));
 
-           $this->response["state"]= "ko";
-           $this->response["message"]= "Error al ejecutar la sentencia. Codigo: ".$logModel->_get("id");
-           $this->response["query"]= [];
+            $this->response["state"]= "ko";
+            $this->response["message"]= "Error executing query. Code: ".$logModel->_get("id");
+            $this->response["query"]= [];
         } 
 
         $pdo = $this->desconectarBd();
@@ -171,9 +171,9 @@ class GeneralService extends ConexionService{
 
             $logModel->_set("id",$this->guardarLogErrores($logModel));
 
-           $this->response["state"]= "ko";
-           $this->response["message"]= "Error al ejecutar la sentencia. Codigo: ".$logModel->_get("id");
-           $this->response["query"]= [];
+            $this->response["state"]= "ko";
+            $this->response["message"]= "Error executing query. Code: ".$logModel->_get("id");
+            $this->response["query"]= [];
         } 
 
         $pdo = $this->desconectarBd();
@@ -234,9 +234,9 @@ class GeneralService extends ConexionService{
 
             $logModel->_set("id",$this->guardarLogErrores($logModel));
 
-           $this->response["state"]= "ko";
-           $this->response["message"]= "Error al ejecutar la sentencia. Codigo: ".$logModel->_get("id");
-           $this->response["query"]= [];
+            $this->response["state"]= "ko";
+            $this->response["message"]= "Error executing query. Code: ".$logModel->_get("id");
+            $this->response["query"]= [];
         } 
 
         $pdo = $this->desconectarBd();
@@ -297,9 +297,9 @@ class GeneralService extends ConexionService{
 
             $logModel->_set("id",$this->guardarLogErrores($logModel));
 
-           $this->response["state"]= "ko";
-           $this->response["message"]= "Error al ejecutar la sentencia. Codigo: ".$logModel->_get("id");
-           $this->response["query"]= [];
+            $this->response["state"]= "ko";
+            $this->response["message"]= "Error executing query. Code: ".$logModel->_get("id");
+            $this->response["query"]= [];
         } 
 
         $pdo = $this->desconectarBd();
@@ -507,7 +507,7 @@ class GeneralService extends ConexionService{
             $logModel->_set("id",$this->guardarLogErrores($logModel));
 
             $this->response["state"]= "ko";
-            $this->response["message"]= "Error al ejecutar la sentencia. Codigo: ".$logModel->_get("id");
+            $this->response["message"]= "Error executing query. Code: ".$logModel->_get("id");
             $this->response["query"]= [];
         } 
 
@@ -569,9 +569,9 @@ class GeneralService extends ConexionService{
 
             $logModel->_set("id",$this->guardarLogErrores($logModel));
 
-           $this->response["state"]= "ko";
-           $this->response["message"]= "Error al ejecutar la sentencia. Codigo: ".$logModel->_get("id");
-           $this->response["query"]= [];
+            $this->response["state"]= "ko";
+            $this->response["message"]= "Error executing query. Code: ".$logModel->_get("id");
+            $this->response["query"]= [];
         } 
 
         $pdo = $this->desconectarBd();
@@ -626,9 +626,8 @@ class GeneralService extends ConexionService{
                 JOIN origins o ON o.id = b.origin_id
                 JOIN services s ON s.id = b.service_id
                 JOIN destinys d ON d.id = b.destiny_id
-                WHERE b.active = 1 AND
-					b.date_departure BETWEEN :fecha_inicial AND :fecha_final 
-                ORDER BY b.date_departure desc,b.pick_up_time;
+                WHERE b.active = 1 AND b.date_departure BETWEEN :fecha_inicial AND :fecha_final 
+                ORDER BY b.date_departure desc,b.pick_up_time desc;
             ';
 
             $result = $pdo->prepare($query);
@@ -637,23 +636,23 @@ class GeneralService extends ConexionService{
             $result->execute(); 
             
             $this->response["state"]= "ok";
-            $this->response["message"]= "Resultado de la función listBookingActivosxTypeId2()";
+            $this->response["message"]= "Resultado de la función listBookingActivosxTypexDate()";
             $this->response["query"]= $result;
            
         }catch(PDOException $e){
 
             $logModel = new LogModel();
 
-            $logModel->_set("method","GeneralService/listBookingActivosxTypeId2()");
+            $logModel->_set("method","GeneralService/listBookingActivosxTypexDate()");
             $logModel->_set("query",$query);
             $logModel->_set("code",$e->getCode());
             $logModel->_set("error",$e->getMessage());
 
             $logModel->_set("id",$this->guardarLogErrores($logModel));
 
-           $this->response["state"]= "ko";
-           $this->response["message"]= "Error al ejecutar la sentencia. Codigo: ".$logModel->_get("id");
-           $this->response["query"]= [];
+            $this->response["state"]= "ko";
+            $this->response["message"]= "Error executing query. Code: ".$logModel->_get("id");
+            $this->response["query"]= [];
         } 
 
         $pdo = $this->desconectarBd();
@@ -688,14 +687,14 @@ class GeneralService extends ConexionService{
             $result->execute(); 
             
             $this->response["state"]= "ok";
-            $this->response["message"]= "Resultado de la función serviceActivosxOriginId()";
+            $this->response["message"]= "Resultado de la función passengerGroupActivosxDestinyId()";
             $this->response["query"]= $result;
            
         }catch(PDOException $e){
 
             $logModel = new LogModel();
 
-            $logModel->_set("method","GeneralService/serviceActivosxOriginId()");
+            $logModel->_set("method","GeneralService/passengerGroupActivosxDestinyId()");
             $logModel->_set("query",$query);
             $logModel->_set("code",$e->getCode());
             $logModel->_set("error",$e->getMessage());
@@ -705,6 +704,57 @@ class GeneralService extends ConexionService{
            $this->response["state"]= "ko";
            $this->response["message"]= "Error al ejecutar la sentencia. Codigo: ".$logModel->_get("id");
            $this->response["query"]= [];
+        } 
+
+        $pdo = $this->desconectarBd();
+
+        return $this->response;
+          
+    }
+
+    function userValidateLogin($user,$passw){
+
+        $pdo = $this->conectarBd();
+
+        try{
+            $query = '
+                SELECT  
+                u.id,
+                u.id_people,
+                t.`name` people,
+                u.username,  
+                u.image,              
+                u.`password`,
+                u.token,
+                u.active
+                FROM ad_people_user u
+                JOIN ad_people t ON t.id = u.id_people
+                WHERE u.username = :user AND u.`password` = :passw;
+            ';
+
+            $result = $pdo->prepare($query);
+            $result->bindValue(":user", $user);
+            $result->bindValue(":passw", $this->encriptarTexto($passw));
+            $result->execute(); 
+            
+            $this->response["state"]= "ok";
+            $this->response["message"]= "Resultado de la función userValidateLogin()";
+            $this->response["query"]= $result;
+           
+        }catch(PDOException $e){
+
+            $logModel = new LogModel();
+
+            $logModel->_set("method","GeneralService/userValidateLogin()");
+            $logModel->_set("query",$query);
+            $logModel->_set("code",$e->getCode());
+            $logModel->_set("error",$e->getMessage());
+
+            $logModel->_set("id",$this->guardarLogErrores($logModel));
+
+            $this->response["state"]= "ko";
+            $this->response["message"]= "Error executing query. Code: ".$logModel->_get("id");
+            $this->response["query"]= [];
         } 
 
         $pdo = $this->desconectarBd();

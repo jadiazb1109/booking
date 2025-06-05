@@ -69,6 +69,7 @@ window.createPayment = async function(token, button, buttonText) {
       cuerrentRide.room_number = txtRoomNumber.value;
       cuerrentRide.client.pay =  data;
       window.setDataCurrentRideBooking(cuerrentRide);
+      
       window.mtdActivarLoad(button, "schedule...");
 
       const result = await $.ajax({

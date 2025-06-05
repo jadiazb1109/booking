@@ -706,4 +706,84 @@ class EnviarCorreoService extends ConexionService{
         return $this->response;
 
     }
+
+    function emailResetPassword($name,$user,$email,$passw){
+        //Instantiation and passing `true` enables exceptions
+        $mail = new PHPMailer(true);
+
+        try {
+   
+            //Server settings
+            //$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+            $mail->isSMTP();                                            //Send using SMTP
+            $mail->Host       = 'smtp.hostinger.com';                     //Set the SMTP server to send through
+            $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+            $mail->Username   = "info-flexwit@erp-soft.dev";                     //SMTP username
+            $mail->Password   = "3sc0rp10n.JD";                               //SMTP password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         //Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+            $mail->Port       = 587;                                    //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+        
+            //Recipients
+            $mail->setFrom("info-flexwit@erp-soft.dev", "HR TRANSPORTATION");
+            $mail->addReplyTo("reservations@hrtransportation.us", "HR TRANSPORTATION");
+            //$mail->addAddress('directoradministrativo@apunidos.com', 'melissa');     //Add a recipient
+            $mail->addBCC($email,$name);
+           
+        
+            //Content
+            $mail->CharSet = 'UTF-8';
+            $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->Subject = "Remember - ORBER";
+            $mail->Body = '
+        
+                <!doctype html>
+                <html>
+        
+                <head>
+                    <meta charset="utf-8" />
+                </head>
+        
+                <body>
+                    <table align="center" style="font-family:Verdana,Geneva,sans-serif">
+                        <tbody>
+                            <tr style="text-align: center; vertical-align: middle;">
+                                <td style="width:500px; border-bottom:rgb(0, 26, 255) 2px solid;"><img data-imagetype="External" src="../../_img/bg_4.jpg" width="160" height="180"> </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:10px; width:500px">
+                                    <p style="text-align:left; font-size:12px">'.$name.'</p>
+                                    <p style="text-align:left; font-size:12px"><span style="font-weight:bold">Thank you for being part of this family!</span></p>
+                                    <p style="text-align:left; font-size:12px">You have recently forgotten your password to access the system. Do not worry, we will remind you!</p>
+                                    <p style="text-align:left; font-size:12px"><span style="font-weight:bold">User:</span> '.$user.'</p>
+                                    <p style="text-align:left; font-size:12px"><span style="font-weight:bold">Password:</span> '.$passw.'</p> 
+                                </td>
+                            </tr>
+                            <tr style="text-align: center; vertical-align: middle;">
+                                <td style="width:500px; border-top:rgb(0, 26, 255) 2px solid; padding-top:5px; font-size:10px">
+                                    <p>All rights reserved.</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </body>
+        
+                </html>
+            
+            ';
+        
+            
+            $mail->send();
+            $this->response["state"] = "ok";
+            $this->response["message"] = "Message sent" ;
+           
+        
+        } catch (Exception $e) {
+        
+            $this->response["state"] = "ko";
+            $this->response["message"] = "Message not sent -> ". $mail->ErrorInfo ;
+        }
+
+        return $this->response;
+
+    }
 }
